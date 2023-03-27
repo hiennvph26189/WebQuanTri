@@ -8,6 +8,7 @@ import { getAllMembers } from '../../../services/membersService';
 import * as actions from '../../../store/actions';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
+import NapTienMembers from './NapTienMembers';
 import  './product.scss';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';

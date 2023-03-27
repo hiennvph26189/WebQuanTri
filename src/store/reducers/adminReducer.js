@@ -5,6 +5,7 @@ const initialState = {
     isLoading: false,
     products: [],
     members: [],
+    priceMembers: [],
 
 }
 
@@ -67,6 +68,22 @@ const adminReducer = (state = initialState, action) => {
             console.log('FETCH_MEMBERS_FAILED', action)
             
             state.members = []
+            return {
+                ...state
+               
+            }
+        case actionTypes.FETCH_MEMBERSPRICE_SUCCESS:
+            console.log(action.data,"success")
+            state.priceMembers =  action.data
+            console.log('FETCH_MEMBERSPRICE_SUCCESS', action)
+            return {
+                ...state
+              
+            }
+        case actionTypes.FETCH_MEMBERSPRICE_FAILED:
+            console.log('FETCH_MEMBERSPRICE_FAILED', action)
+            
+            state.priceMembers = []
             return {
                 ...state
                

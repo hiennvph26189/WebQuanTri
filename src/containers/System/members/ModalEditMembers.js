@@ -265,7 +265,7 @@ class ModalEditMembers extends Component {
                                 </div>
                                 <div className='col-6 form-group '>
                                     <label>Email</label>
-                                    <input type="text" className="form-control" placeholder='Nhập email' onChange={(event)=>this.handleOnChageInput(event,'email')} name="email" value={this.state.email}/>
+                                    <input disabled type="text" className="form-control" placeholder='Nhập email' onChange={(event)=>this.handleOnChageInput(event,'email')} name="email" value={this.state.email}/>
                                 </div>
                             </div> 
                             

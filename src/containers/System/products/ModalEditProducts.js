@@ -52,7 +52,9 @@ class ModalEditProducts extends Component {
        this.props.getCategoriesStart()
        const arr = []
        let products = this.props.currentProducts
+       console.log(products,"prodadsfad")
         if(products && !_.isEmpty(products)){
+           
             if(products.image){
                 let list = JSON.parse(products.image)
                 this.setState({

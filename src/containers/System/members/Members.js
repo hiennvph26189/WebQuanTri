@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import ModalMembers from './ModalMembers';
 import ModalEditMembers from './ModalEditMembers';
+import ModalDanhSachNap from './ModalDanhSachNap';
 import { getAllMembers } from '../../../services/membersService';
 import * as actions from '../../../store/actions'
 import CurrencyFormat from 'react-currency-format';
@@ -11,14 +12,18 @@ class Members extends Component {
     constructor(props) {
         super(props);
         this.state={
+           
             arrMembers: [],
             isOpenModal: false,
             isOpenEditMembersModal: false,
-            membersEdit:{}
+            membersEdit:{},
+            isOpenModalDanhSachNap: false,
+            idMember: {},
         }
     }
     async componentDidMount() {
         this.props.fetchMembers()
+        
        
        
     }
@@ -38,46 +43,52 @@ class Members extends Component {
             membersEdit: product
         })
         
+    } 
+    handleEditMembersNapTien=(item)=>{
+        
+        this.setState({
+            isOpenModalDanhSachNap: true,
+            idMember: item.id
+        })
+        
+        console.log(this.state.idMember,"sale")
+        
+        
+        
     }
+    
     toggleMembersModal = ()=>{
         this.setState({
-            isOpenModal: !this.state.isOpenModal
+            isOpenModal: !this.state.isOpenModal,
+           
         })
     }
-
+    toggleMembersNapTienModal = ()=>{
+        this.setState({
+            isOpenModalDanhSachNap:!this.state.isOpenModalDanhSachNap
+        })
+    }
     componentDidUpdate(prevProps, prevState,snapshot) {
         // console.log(prevProps.membersRedux,"prevProps")
-        setTimeout(() =>{
+        
             if(prevProps.membersRedux !== this.props.membersRedux){
                 console.log("OK")
                 this.setState({
                     arrMembers: this.props.membersRedux
                 })
-                console.log(this.state.arrMembers,"arrr")
+                
                 
             }
-        },1)    
-       
-       
-    }
-    showImage = (image)=>{
-        if(image){
            
-            let list = JSON.parse(image)
-           let url = ""
-           for(let i = 0; i< list.length; i++){
-                if(list[0]){
-                    url = list[0]
-                }
-           }
-           return url
-
-        }
+       
+       
     }
+   
     render() {
-        console.log(this.state.arrMembers,"arrr2")
-        let arrMembers = [...this.state.arrMembers]
         
+       
+        let arrMembers = [...this.state.arrMembers]
+        console.log(this.state.idMember,"ald;à;")
         return (
             <div className="container members-container">
             <ModalMembers
@@ -86,15 +97,24 @@ class Members extends Component {
                 toggleFromParent = {this.toggleMembersModal}
                 createNewMembers = {this.createNewMembers}
             />
-            {this.state.isOpenEditMembersModal &&
+            {
+                this.state.isOpenModalDanhSachNap&&
+            
+            <ModalDanhSachNap
+                isOpen = {this.state.isOpenModalDanhSachNap}
+                toggleFromParentNapTien = {this.toggleMembersNapTienModal}
+                currentMembersNapTien = {this.state.idMember}
+            />
+        }
+         
                 <ModalEditMembers
                 isOpen = {this.state.isOpenEditMembersModal}
                 toggleFromParent = {this.toggleEditMembersModal}
-                currentMembers = {this.state.membersEdit}
+                
                  
             />
                 
-            }
+            
              
             <div className='title text-center'> Read Members</div>
             <div className='mx-2'>
@@ -108,10 +128,11 @@ class Members extends Component {
                         <th>Tên người dùng</th>
                         <th>Email</th>
                         <th>Số điện thoại</th>
-                        <th>Địa chỉ</th>
+                       
                         <th>Tiền tài khoản</th>
+                        <th>Tiền nạp</th>
                         <th>Trạng thái</th>
-                        <th>Giới tính</th>
+                        
                         
                         <th>Action</th>
                     </tr>
@@ -131,20 +152,11 @@ class Members extends Component {
                                 
                                 <td>{item.email}</td>
                                 <td>{item.soDienThoai}</td>
-                                <td>{item.diaChi}</td>
+                                
                                 <td>{item.tienTk}</td>
-                                {
-                                    item.gioiTinh&&item.gioiTinh === 1 &&
-                                    <td>Nam</td>
-                                }
-                                {
-                                    item.gioiTinh&&item.gioiTinh === 2 &&
-                                    <td>Nữ</td>
-                                }
-                                {
-                                    item.gioiTinh&&item.gioiTinh === 3 &&
-                                    <td>Khác</td>
-                                }
+                                <td>
+                                    <button onClick={()=>this.handleEditMembersNapTien(item)} class="btn  mx-1 px-2 btn-warning">Nạp tiền</button>
+                                </td>
                                 
                                 {item.status === 0 &&
                                     <td className='text-success'>
@@ -157,13 +169,13 @@ class Members extends Component {
                                     </td>
                                 }
                                 {item.status === 1 &&
-                                    <td className='text-danger'>
+                                    <td  className='text-warning'>
                                         Đang chờ xác nhận nạp tiền
                                     </td>
                                 }
                                 
 
-                                
+
                                 <td className='action'>
                                 <button onClick={()=>this.handleEditMembers(item)} class="btn btn-success mx-1 px-2 ">Edit</button>
                                 <button onClick={()=>this.handleDeleteMembers(item.id)} class="btn btn-danger  px-2">Delete</button>

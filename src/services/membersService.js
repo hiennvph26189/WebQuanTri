@@ -5,16 +5,31 @@ const getAllMembers = ()=>{
 const createNewMembers = (data)=>{
     return axios.post(`/api/add-members`,data)
 }
+const getLichSuNap = (id)=>{
+    console.log(id,"getId")
+    return axios.get(`/api/lich-su-naptien-members-admin?id=${id}`)
+}
 const deleteMembersService = (id)=>{
     return axios.delete(`/api/delete-members`,{data:{id:id}})
 }
 const editMembersService = (imputData)=>{
     return axios.put(`/api/edit-members`,imputData)
 }
+const editMembersPrices = (data)=>{
+    console.log(data,"imputData")
+    return axios.put(`/api/naptien-members-admin`,data)
+}
+const editHuyPricesMembers = (data)=>{
+    console.log(data,"d")
+    return axios.put(`/api/huynaptien-members-admin`,data)
+}
 
 export{
     getAllMembers,
     createNewMembers,
     deleteMembersService,
-    editMembersService
+    editMembersService,
+    getLichSuNap,
+    editMembersPrices,
+    editHuyPricesMembers
 }

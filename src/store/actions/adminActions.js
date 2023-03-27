@@ -1,6 +1,6 @@
 import actionTypes from './actionTypes';
-import { getAllProducts,createNewProductsService,uploadImage,deleteProductsService,editProductsService } from '../../services/productsService';
-import { getAllMembers } from '../../services/membersService';
+import { getAllProducts,createNewProductsService,uploadImage,deleteProductsService,editProductsService, } from '../../services/productsService';
+import { getAllMembers,getLichSuNap,editMembersPrices,editHuyPricesMembers } from '../../services/membersService';
 import { toast } from 'react-toastify';
 // export const fetchCategoriesStart = () => ({
 //     type: actionTypes.FETCH_CATEGORIES_START,
@@ -214,4 +214,102 @@ export const fetchMembersSuccess = (getMembers) => ({
 })
 export const fetchMembersFailed = () => ({
     type: actionTypes.FETCH_MEMBERS_FAILED,
+})
+
+
+export const fetchMembersPrice = (id) => {
+    return async(dispatch,getState)=>{
+        console.log(id,"Loading Action")
+        try {
+           
+            
+            let res = await getLichSuNap(id)
+              
+            if(res && res.errCode === 0){
+                dispatch(fetchMembersPriceSuccess(res.data.reverse()))
+            }else{
+                dispatch(fetchMembersPriceFailed())
+            }
+        } catch (error) {
+            dispatch(fetchMembersPriceFailed())
+            console.log("fetchMembersPriceFailed ",error)
+        }
+    }
+   
+}
+export const fetchMembersPriceSuccess = (getMembers) => ({
+    
+    type: actionTypes.FETCH_MEMBERSPRICE_SUCCESS,
+    data: getMembers
+    
+})
+export const fetchMembersPriceFailed = () => ({
+    type: actionTypes.FETCH_MEMBERSPRICE_FAILED,
+})
+
+
+export const updateMembersPrice = (data) => {
+    return async(dispatch,getState)=>{
+        
+        try {
+           
+            
+            let res = await editMembersPrices(data)
+              
+            if(res && res.errCode === 0){
+                toast.success("Nạp tiền thành công")
+                dispatch(updateMembersPriceSuccess())
+                dispatch(fetchMembersPrice(data.idUser))
+                dispatch(fetchMembers())
+            }else{
+                dispatch(updateMembersPriceFailed())
+            }
+        } catch (error) {
+            dispatch(updateMembersPriceFailed())
+            console.log("fetchMembersPriceFailed ",error)
+        }
+    }
+   
+}
+export const updateMembersPriceSuccess = () => ({
+    
+    type: actionTypes.UPDATE_PRICES_SUCCESS,
+
+    
+})
+export const updateMembersPriceFailed = () => ({
+    type: actionTypes.UPDATE_PRICES_FAILED,
+})
+
+export const updateHuyMembersPrice = (data) => {
+    return async(dispatch,getState)=>{
+        console.log(data,"adsahdf")
+        try {
+           
+            
+            let res = await editHuyPricesMembers(data)
+              
+            if(res && res.errCode === 0){
+                toast.success("Nạp tiền thành công")
+                dispatch(updateHuyMembersPriceSuccess())
+                dispatch(fetchMembersPrice(data.idUser))
+                dispatch(fetchMembers())
+            }else{
+                dispatch(updateHuyMembersPriceFailed())
+            }
+        } catch (error) {
+            dispatch(updateHuyMembersPriceFailed())
+            console.log("fetchMembersPriceFailed ",error)
+        }
+    }
+   
+}
+export const updateHuyMembersPriceSuccess = () => ({
+    
+    type: actionTypes.HUY_PRICES_SUCCESS,
+
+    
+})
+export const updateHuyMembersPriceFailed = () => ({
+    type: actionTypes.HUY_PRICES_FAILED,
 })

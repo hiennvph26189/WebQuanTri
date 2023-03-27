@@ -68,6 +68,7 @@ class ProductManage extends Component {
             isOpenEditProductsModal: true,
             productsEdit: product
         })
+       
         
     }
     showImage = (image)=>{
@@ -85,6 +86,7 @@ class ProductManage extends Component {
         }
     }
     render() {
+       
         this.showImage()
         let arrProducts = this.state.arrProducts;
         // arrProducts.forEach(item => {
