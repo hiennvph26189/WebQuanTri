@@ -24,7 +24,8 @@ class NapTienMembers extends Component {
             id: null,
             arrPrice: [],
             napTien: 0,
-            anhChuyenTien: ''
+            anhChuyenTien: '',
+            idPrice: 0
 
         }
        
@@ -36,7 +37,7 @@ class NapTienMembers extends Component {
         
         this.setState({
             anhChuyenTien: this.props.currentMembersNapTien,
-            
+            idPrice: this.props.currentNapTien
         })
         
         
@@ -56,16 +57,15 @@ class NapTienMembers extends Component {
         })
     }
     handleEditPriceMembers =()=>{
+
          if(this.state.napTien&&this.props.currentMembersNapTien){
             this.props.updateMembersPrice({
                 id:this.state.idPrice,
                 tienNap: this.state.napTien,
                 idUser: this.props.currentMembersNapTien
             })
-            this.setState({
-                tienNap: null
-            })
-            this.props.toggleFromParentNapTien()
+            this.toggle()
+            
         }
     }
     

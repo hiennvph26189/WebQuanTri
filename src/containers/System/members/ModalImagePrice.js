@@ -32,7 +32,7 @@ class ModalImagePrice extends Component {
     
     async componentDidMount () {
         
-        this.setState({
+        this.setState({ 
             anhCHuyenTien: this.props.currentMembersNapTien,
           
         })
