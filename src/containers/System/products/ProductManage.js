@@ -185,7 +185,7 @@ class ProductManage extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state.admin.products,"Arrr")
+    console.log(state.admin.products,"sd;fka;df")
     return {
         productsRedux: state.admin.products,
         categoriesRedux: state.admin.categories,

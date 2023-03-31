@@ -5,6 +5,8 @@ const initialState = {
     isLoading: false,
     products: [],
     members: [],
+    orders:[],
+    carts:[],
     priceMembers: [],
 
 }
@@ -82,6 +84,23 @@ const adminReducer = (state = initialState, action) => {
             }
         case actionTypes.FETCH_MEMBERSPRICE_FAILED:
             console.log('FETCH_MEMBERSPRICE_FAILED', action)
+            
+            state.priceMembers = []
+            return {
+                ...state
+               
+            }
+        case actionTypes.FETCH_ORDERS_SUCCESS:
+            
+            state.orders =  action.dataOrder
+            state.carts =  action.dataCart
+            console.log('FETCH_ORDERS_SUCCESS', action)
+            return {
+                ...state
+              
+            }
+        case actionTypes.FETCH_ORDERS_FAILED:
+            console.log('FETCH_ORDERS_FAILED', action)
             
             state.priceMembers = []
             return {

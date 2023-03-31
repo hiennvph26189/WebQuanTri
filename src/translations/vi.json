@@ -30,6 +30,7 @@
             "header": "Hệ thống",
             "system-administrator": {
                 "header": "Quản trị hệ thống",
+                "order-manage": "Quản lý đơn hàng",
                 "user-manage": "Quản lý người sử dụng",
                 "user-member": "Quản lý người dùng",
                 "product-manage": "Quản lý sản phẩm",

@@ -1,6 +1,7 @@
 import actionTypes from './actionTypes';
 import { getAllProducts,createNewProductsService,uploadImage,deleteProductsService,editProductsService, } from '../../services/productsService';
 import { getAllMembers,getLichSuNap,editMembersPrices,editHuyPricesMembers } from '../../services/membersService';
+import { getAllOrders } from '../../services/OrdersService';
 import { toast } from 'react-toastify';
 // export const fetchCategoriesStart = () => ({
 //     type: actionTypes.FETCH_CATEGORIES_START,
@@ -312,4 +313,33 @@ export const updateHuyMembersPriceSuccess = () => ({
 })
 export const updateHuyMembersPriceFailed = () => ({
     type: actionTypes.HUY_PRICES_FAILED,
+})
+
+export const fetchOrderProducts = () => {
+    return async(dispatch,getState)=>{
+       
+        try {
+            let res = await getAllOrders()
+              
+            if(res && res.errCode === 0){
+                dispatch(fetchOrderProductsSuccess(res.getAllOrder,res.getCarts))
+            }else{
+                dispatch(fetchOrderProductsFailed())
+            }
+        } catch (error) {
+            dispatch(fetchMembersPriceFailed())
+            console.log("fetchOrderProductsFailed ",error)
+        }
+    }
+   
+}
+export const fetchOrderProductsSuccess = (getAllOrder,getCarts) => ({
+    
+    type: actionTypes.FETCH_ORDERS_SUCCESS,
+    dataOrder:getAllOrder,
+    dataCart:getCarts
+    
+})
+export const fetchOrderProductsFailed = () => ({
+    type: actionTypes.FETCH_ORDERS_FAILED,
 })
