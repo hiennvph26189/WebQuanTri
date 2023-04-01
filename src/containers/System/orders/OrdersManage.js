@@ -8,7 +8,7 @@ import Moment from 'moment';
 import vi from "moment/locale/vi";
 import fr from "moment/locale/fr";
 // import ModalOrders from './ModalOrders';
-// import ModalEditOrders from './ModalEditOrders';
+import ModalEditOrder from './ModalEditOrder';
 // import { getAllUOrdersManage,createNewOrdersManage,deleteOrdersManageService,editOrdersManageService } from '../../services/OrdersManageService';
 
 
@@ -20,10 +20,11 @@ class OrdersManage extends Component {
             arrOrders: [],
             arrCarts: [],
             arrProducts:[],
-            arrMembers:[]
+            arrMembers:[],
+            isOpenEditOrderModal: false,
+            itemEditOrder: {}
 
         }
-        
         
        }
 
@@ -34,24 +35,10 @@ class OrdersManage extends Component {
         this.props.fetchMembers()
         
      }
-    //  handleAddNewOrders = ()=>{
-    //     this.setState({
-    //         isOpenModal: true
-    //     })
-    // }
-    // toggleOrdersModal = ()=>{
-    //     this.setState({
-    //         isOpenModal: !this.state.isOpenModal
-    //     })
-    // }
-    // toggleEditOrdersModal = ()=>{
-    //     this.setState({
-    //         isOpenEditOrdersModal: !this.state.isOpenEditOrdersModal
-    //     })
-    // }
+   
     componentDidUpdate(prevProps, prevState,snapshot) {
        
-        //console.log(prevProps.productsRedux,'prevProps')
+       
         if(prevProps.ordersRedux !== this.props.ordersRedux){
             this.setState({
                 arrOrders: this.props.ordersRedux
@@ -135,42 +122,56 @@ class OrdersManage extends Component {
         const newFr = Moment(time).locale("vi", fr).format("HH:mm:ss");
         return newFr
     }
+    toggleEditOrderModal = ()=>{
+        this.setState({
+            isOpenEditOrderModal: !this.state.isOpenEditOrderModal
+        })
+    }
+    handleEditOrder=(order)=>{
+        this.setState({
+            isOpenEditOrderModal: true,
+            itemEditOrder: order
+            
+        })
+        
+    } 
     render() {
        console.log(this.state.arrMembers,"Members")
        let arrOrders = this.state.arrOrders
         return (
             <div className="container category-container">
-                {/* <ModalCategory
-                    isOpen = {this.state.isOpenModal}
-                    test = {'abc'}
-                    toggleFromParent = {this.toggleCategoryModal}
-                    createNewOrdersManage = {this.createNewOrdersManage}
-                />
-                {this.state.isOpenEditCategoryModal &&
-                    <ModalEditCategory
-                    isOpen = {this.state.isOpenEditCategoryModal}
-                    toggleFromParent = {this.toggleEditCategoryModal}
-                    currentCategory = {this.state.categoryEdit}
-                     EditCategory = {this.doEditCategory}
-                />
-                    
-                } */}
+                
+               {this.state.isOpenEditOrderModal&&
+                    <ModalEditOrder
+                    isOpen = {this.state.isOpenEditOrderModal}
+                    toggleFromParent = {this.toggleEditOrderModal}
+                    itemEditOrder = {this.state.itemEditOrder}
+                    arrMembers = {this.state.arrMembers}
+                    arrProducts = {this.state.arrProducts}
+                    arrCarts = {this.state.arrCarts}
+                   
+
                  
-                <div className='title text-center'> Read Category</div>
+                />
+            }
+                    
+               
+                 
+                <div className='title text-center'> Read Orders</div>
                 <div className='mx-2'>
-                    <button className='btn btn-primary px-2' onClick={()=>this.handleAddNewCategory()}> <i className='fas fa-plus px-2'></i>Add new category</button>
+                    <button className='btn btn-primary px-2' onClick={()=>this.handleAddNewOrder()}> <i className='fas fa-plus px-2'></i>Add new category</button>
                 </div>
                 <div className='category-table mt-4 mx-2'>
                 <table id="customers" class="ws-table-all">
                     <tbody>
                         <tr>
-                            <th>Tên sản phẩm</th>
-                            <th>Tên người mua</th>
+                            
+                            <th style={{width:"200px"}}>Tên người mua</th>
                             <th>Số điện thoại</th>
                             <th>Tổng tiền</th>
                             <th>Trạng thái</th>
                             <th>Ngày đặt</th>
-                            <th>Ngày giao</th>
+                           
                             <th>Chỉnh sửa</th>
 
                         </tr>
@@ -179,16 +180,15 @@ class OrdersManage extends Component {
                         return(
                             <>
                                 <tr>
-                                    <td>{this.listNamePhroducts(item.idCart)}</td>
-                                    
                                     <td>{this.nameMembers(item.idUser)}</td>
                                     <td>{this.phoneMembers(item.idUser)}</td>
-                                    <td>{this.price(item.tongTien)}</td>
-                                    <td>{item.status == 0 ? "Đang chờ xử lý" : item.status == 1 ? "Đang giao đơn" : item.status == 2 ? "Đã giao thành công" : item.status == 5 ? "Đơn hủy" :""}</td>
+                                    <td style={{fontWeight:"600",color:"red"}}>{this.price(item.tongTien)}</td>
+                                    <td style={{fontWeight:"600",color:item.status == 0 ? "#FF9900" : item.status == 1 ? "#0099FF" : item.status == 2 ? "#008B8B" : item.status == 3 ? "#006400" :item.status == 4?"#FF6347":"#8B0000"}}>
+                                    {item.status == 0 ? "Đang chờ xử duyệt đơn" : item.status == 1 ? "Đã xác nhận đơn hàng"  : item.status == 2 ? "Đơn đang giao" : item.status == 3 ? "Giao thành công"  :item.status == 4?"Đang Chờ xác nhận hủy đơn":"Đã hủy thành công"}</td>
                                     <td>{this.formatDate(item.createdAt)}</td>
-                                    <td>{item.status==2?this.formatDate(item.updatedAt):"Chưa giao"}</td>
-                                    <td className='action'>
-                                    <button onClick={()=>this.handleEditCategory(item)} class="btn btn-success mx-1 px-2 ">Edit</button>
+                                    
+                                    <td className='action' style={{display:"flex", justifyContent:"center",alignItems:"center"}}>
+                                    <button onClick={()=>this.handleEditOrder(item)} class="btn btn-success mx-1 px-2 ">Edit</button>
                                     <button onClick={()=>this.handleDeleteCategory(item.id)} class="btn btn-danger  px-2">Delete</button>
                                     </td>
                                 </tr>

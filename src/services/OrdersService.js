@@ -2,6 +2,15 @@ import axios  from "../axios";
 const getAllOrders = ()=>{
     return axios.get(`/api/get-all-orders-product`)
 }
+const huyOrdersSucces = (data)=>{
+    return axios.put(`/api/huy-orders-success-product`,data)
+}
+const checkOrderService = (data)=>{
+    return axios.put(`/api/check-orders`,data)
+}
+const GiaoDonService = (data)=>{
+    return axios.put(`/api/giao-don-orders`,data)
+}
 // const createNewCategories = (data)=>{
 //     return axios.post(`/api/add-categories`,data)
 // }
@@ -13,6 +22,9 @@ const getAllOrders = ()=>{
 // }
 export  {
     getAllOrders,
+    huyOrdersSucces,
+    checkOrderService,
+    GiaoDonService
     // createNewCategories,
     // deleteCategoriesService,
     // editCategoriesService

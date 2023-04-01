@@ -1,7 +1,7 @@
 import actionTypes from './actionTypes';
 import { getAllProducts,createNewProductsService,uploadImage,deleteProductsService,editProductsService, } from '../../services/productsService';
 import { getAllMembers,getLichSuNap,editMembersPrices,editHuyPricesMembers } from '../../services/membersService';
-import { getAllOrders } from '../../services/OrdersService';
+import { getAllOrders ,huyOrdersSucces,checkOrderService,GiaoDonService} from '../../services/OrdersService';
 import { toast } from 'react-toastify';
 // export const fetchCategoriesStart = () => ({
 //     type: actionTypes.FETCH_CATEGORIES_START,
@@ -342,4 +342,100 @@ export const fetchOrderProductsSuccess = (getAllOrder,getCarts) => ({
 })
 export const fetchOrderProductsFailed = () => ({
     type: actionTypes.FETCH_ORDERS_FAILED,
+})
+
+
+export const HuyOrderCart = (data) => {
+    return async(dispatch,getState)=>{
+        console.log(data,"Data Huy Order")
+        try {
+
+            let res = await huyOrdersSucces(data)
+              
+            if(res && res.errCode === 0){
+                toast.success("Hủy thành công")
+                // dispatch(updateHuyOrderSuccess())
+                dispatch(HuyOrderSuccess())
+                dispatch(fetchOrderProducts())
+            }else{
+                dispatch(HuyOrderFailed())
+            }
+        } catch (error) {
+            dispatch(HuyOrderFailed())
+            console.log("HuyOrderFailed ",error)
+        }
+    }
+   
+}
+export const HuyOrderSuccess = () => ({
+    
+    type: actionTypes.HUY_ORDER_SUCCESS,
+
+    
+})
+export const HuyOrderFailed = () => ({
+    type: actionTypes.HUY_ORDERS_FAILED,
+})
+
+export const checkOrderCart = (data) => {
+    return async(dispatch,getState)=>{
+        console.log(data,"Data Huy Order")
+        try {
+
+            let res = await checkOrderService(data)
+              
+            if(res && res.errCode === 0){
+                toast.success("Đã xác nhận đơn hàng")
+                // dispatch(updateHuyOrderSuccess())
+                dispatch(checkOrderSuccess())
+                dispatch(fetchOrderProducts())
+            }else{
+                dispatch(checkOrderFailed())
+            }
+        } catch (error) {
+            dispatch(checkOrderFailed())
+            console.log("checkOrderFailed ",error)
+        }
+    }
+   
+}
+export const checkOrderSuccess = () => ({
+    
+    type: actionTypes.CHECK_ORDER_SUCCESS,
+
+    
+})
+export const checkOrderFailed = () => ({
+    type: actionTypes.CHECK_ORDERS_FAILED,
+})
+export const giaoOrderCart = (data) => {
+    return async(dispatch,getState)=>{
+        console.log(data,"Data Huy Order")
+        try {
+
+            let res = await GiaoDonService(data)
+              
+            if(res && res.errCode === 0){
+                toast.success("Đã giao đơn thành công")
+                // dispatch(updateHuyOrderSuccess())
+                dispatch(giaoOrderSuccess())
+                dispatch(fetchOrderProducts())
+            }else{
+                dispatch(giaoOrderFailed())
+            }
+        } catch (error) {
+            dispatch(giaoOrderFailed())
+            console.log("giaoOrderFailed ",error)
+        }
+    }
+   
+}
+export const giaoOrderSuccess = () => ({
+    
+    type: actionTypes.GIAO_ORDER_SUCCESS,
+
+    
+})
+export const giaoOrderFailed = () => ({
+    type: actionTypes.GIAO_ORDERS_FAILED,
 })
