@@ -11,10 +11,13 @@ const checkOrderService = (data)=>{
 const GiaoDonService = (data)=>{
     return axios.put(`/api/giao-don-orders`,data)
 }
+const deleteOrderService = (id)=>{
+    return axios.delete(`/api/delete-orders?id=${id}`)
+}
 // const createNewCategories = (data)=>{
 //     return axios.post(`/api/add-categories`,data)
 // }
-// const deleteCategoriesService = (id)=>{
+// const deleteCategoriesService = (id)=>{  
 //     return axios.delete(`/api/delete-categories`,{data:{id:id}})
 // }
 // const editCategoriesService = (imputData)=>{
@@ -24,7 +27,8 @@ export  {
     getAllOrders,
     huyOrdersSucces,
     checkOrderService,
-    GiaoDonService
+    GiaoDonService,
+    deleteOrderService
     // createNewCategories,
     // deleteCategoriesService,
     // editCategoriesService

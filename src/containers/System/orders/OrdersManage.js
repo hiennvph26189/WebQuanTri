@@ -135,6 +135,11 @@ class OrdersManage extends Component {
         })
         
     } 
+    handleDeleteOrderCart=(id)=>{
+        if(id){
+            this.props.deleteOrderCart(id)
+        }
+    }
     render() {
        console.log(this.state.arrMembers,"Members")
        let arrOrders = this.state.arrOrders
@@ -189,7 +194,7 @@ class OrdersManage extends Component {
                                     
                                     <td className='action' style={{display:"flex", justifyContent:"center",alignItems:"center"}}>
                                     <button onClick={()=>this.handleEditOrder(item)} class="btn btn-success mx-1 px-2 ">Edit</button>
-                                    <button onClick={()=>this.handleDeleteCategory(item.id)} class="btn btn-danger  px-2">Delete</button>
+                                    <button onClick={()=>this.handleDeleteOrderCart(item.id)} class="btn btn-danger  px-2">Delete</button>
                                     </td>
                                 </tr>
                             </>
@@ -224,7 +229,8 @@ const mapDispatchToProps = dispatch => {
     return {
         fetchOrderProducts: ()=> dispatch(actions.fetchOrderProducts()),
         fetchProducts: ()=> dispatch(actions.fetchProducts()),
-        fetchMembers: ()=> dispatch(actions.fetchMembers())
+        fetchMembers: ()=> dispatch(actions.fetchMembers()),
+        deleteOrderCart: (id)=> dispatch(actions.deleteOrderCart(id))
     };
 };
 

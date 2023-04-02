@@ -1,7 +1,7 @@
 import actionTypes from './actionTypes';
 import { getAllProducts,createNewProductsService,uploadImage,deleteProductsService,editProductsService, } from '../../services/productsService';
 import { getAllMembers,getLichSuNap,editMembersPrices,editHuyPricesMembers } from '../../services/membersService';
-import { getAllOrders ,huyOrdersSucces,checkOrderService,GiaoDonService} from '../../services/OrdersService';
+import { getAllOrders ,huyOrdersSucces,checkOrderService,GiaoDonService,deleteOrderService} from '../../services/OrdersService';
 import { toast } from 'react-toastify';
 // export const fetchCategoriesStart = () => ({
 //     type: actionTypes.FETCH_CATEGORIES_START,
@@ -438,4 +438,35 @@ export const giaoOrderSuccess = () => ({
 })
 export const giaoOrderFailed = () => ({
     type: actionTypes.GIAO_ORDERS_FAILED,
+})
+export const deleteOrderCart = (id) => {
+    return async(dispatch,getState)=>{
+       
+        try {
+
+            let res = await deleteOrderService(id)
+              
+            if(res && res.errCode === 0){
+                toast.success("Đã giao đơn thành công")
+                // dispatch(updateHuyOrderSuccess())
+                dispatch(deleteOrderSuccess())
+                dispatch(fetchOrderProducts())
+            }else{
+                dispatch(deleteOrderFailed())
+            }
+        } catch (error) {
+            dispatch(deleteOrderFailed())
+            console.log("deleteOrderFailed ",error)
+        }
+    }
+   
+}
+export const deleteOrderSuccess = () => ({
+    
+    type: actionTypes.DELETE_ORDER_SUCCESS,
+
+    
+})
+export const deleteOrderFailed = () => ({
+    type: actionTypes.DELETE_ORDERS_FAILED,
 })
