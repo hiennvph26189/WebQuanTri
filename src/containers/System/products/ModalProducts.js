@@ -239,8 +239,8 @@ class ModalProducts extends Component {
                                 <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'hangSx')} name="hangSx" value={this.state.hangSx}/>
                             </div>
                             
-                            <div className=' col-12 row'>
-                                <div className='col-3 form-group  mg-top'>
+                            <div className=' col-12 flexNewEdit'>
+                                <div className='col-sm-12 col-md-3 col-sm-6 form-group  mg-top'>
                                 <label for="inputState">Danh Mục</label>
                                     <select name="roleID" class="form-select" onChange={(event)=>this.handleOnChageInput(event,'idDanhSach')} value={this.state.idDanhSach}>
                                     <option selected value="">---- Chọn danh mục -----</option>
@@ -256,22 +256,22 @@ class ModalProducts extends Component {
                                     </select>
                                     
                                 </div>
-                                <div className='col-3 form-group mg-top'>
+                                <div className='col-sm-12 col-md-3 form-group mg-top'>
                                 <label>Giá sản phẩm</label>
                                 <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'giaSanPham')} name="giaSanPham" value={this.state.giaSanPham}/>
                                 
                             </div>
-                            <div className='col-3 form-group mg-top'>
+                            <div className='col-sm-12 col-md-3 form-group mg-top'>
                                 <label>Giảm giá (%)</label>
                                 <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'sale')} name="name" value={this.state.sale}/>
                             </div>
-                            <div className='col-3 form-group mg-top'>
+                            <div className='col-sm-12 col-md-3 form-group mg-top'>
                                 <label>soLuong</label>
                                 <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'soLuong')} name="name" value={this.state.soLuong}/>
                             </div>
                             </div>
-                            <div className=' col-12 row'>
-                                <div className='col-3 form-group mg-top'>
+                            <div className=' col-sm-4 col-md-3 row'>
+                                <div className=' form-group mg-top'>
                                     <label>Ảnh</label>
                                     <div className='upload-image'>
                                         
@@ -289,11 +289,11 @@ class ModalProducts extends Component {
                                 
                                
                             </div>
-                            <div className='flex  col-12 row ' >
+                            <div className='flex  col-12 flexNewEdit ' >
                                 {url && url.map((item,index) =>{
                                         return( 
                                     <>
-                                        <div className='col-4 ' key={item} style={{position:"relative",marginTop:'10px'}} >
+                                        <div className='col-md-4 col-sm-12 ' key={item} style={{position:"relative",marginTop:'10px'}} >
                                             <img   style={{ maxWidth:'230px'}} onClick={()=>this.openImage()} src={item}/>
                                             <span onClick={()=>this.DeleteImage(item)} className='p-2 cursor-pointer hover:bg-gray-400' style={{   
                                                 position: 'absolute',

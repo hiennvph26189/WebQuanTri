@@ -7,6 +7,8 @@ import ModalDanhSachNap from './ModalDanhSachNap';
 import { getAllMembers } from '../../../services/membersService';
 import * as actions from '../../../store/actions'
 import CurrencyFormat from 'react-currency-format';
+import  './product.scss';
+
 class Members extends Component {
 
     constructor(props) {
@@ -124,13 +126,13 @@ class Members extends Component {
             <table id="customers" class="ws-table-all px-5">
                 <tbody>
                     <tr>
-                        <th>Ảnh</th>
+                        <th >Ảnh</th>
                         <th>Tên người dùng</th>
                         <th>Email</th>
-                        <th>Số điện thoại</th>
+                        <th >Số điện thoại</th>
                        
                         <th>Tiền tài khoản</th>
-                        <th>Tiền nạp</th>
+                        <th >Tiền nạp</th>
                         <th>Trạng thái</th>
                         
                         

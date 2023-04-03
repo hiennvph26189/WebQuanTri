@@ -64,15 +64,15 @@ export const createNewProductsFailed = () => ({
 })
 
 
-export const fetchProducts = () => {
+export const fetchProducts = (page) => {
     return async(dispatch,getState)=>{
         try {
            
-            let res = await getAllProducts()
+            let res = await getAllProducts(page)
             if(res && res.errCode === 0){
-               
-                // console.log(res.products)
-                dispatch(fetchProductsSuccess(res.products.reverse()))
+              
+                // console.log(res.totalProducts,"ads;akdf")
+                dispatch(fetchProductsSuccess(res.products.reverse() ,res.totalProducts.reverse()) )
             }else{
                 dispatch(fetchProductsFailed())
             }
@@ -83,9 +83,10 @@ export const fetchProducts = () => {
     }
    
 }
-export const fetchProductsSuccess = (getProducts) => ({
+export const fetchProductsSuccess = (getProducts,totalProducts) => ({
     type: actionTypes.FETCH_PRODUCTS_SUCCESS,
-    data: getProducts
+    data: getProducts,
+    totalProducts:totalProducts
 })
 export const fetchProductsFailed = () => ({
     type: actionTypes.FETCH_PRODUCTS_FAILED,

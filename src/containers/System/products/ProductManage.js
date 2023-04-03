@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component,useEffect  } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import ModalProducts from './ModalProducts';
@@ -6,24 +6,32 @@ import ModalEditProducts from './ModalEditProducts';
 import { getAllProducts } from '../../../services/productsService';
 import * as actions from '../../../store/actions'
 import CurrencyFormat from 'react-currency-format';
+import  './product.scss';
 class ProductManage extends Component {
 
     constructor(props){
         super(props);
+         
         this.state = {
             arrCategories: [],
             arrProducts: [],
             isOpenModal: false,
             isOpenEditProductsModal: false,
-            productsEdit: {}
+            productsEdit: {},
+            currentPage:1,
+            lenghtPage: [],
+            totalProducts: 0,
+            // currentPage: 1,
+            pageSize: 5,
         }
        }
-
+     
     async componentDidMount() {
-        this.props.fetchProducts()
-       
-       
+        
+        this.props.fetchProducts(this.state.currentPage) 
+        // this.setState({ orders, totalCount, currentPage: this.state.page });
     }
+     
     handleAddNewProducts = ()=>{
         this.setState({
             isOpenModal: true
@@ -49,6 +57,15 @@ class ProductManage extends Component {
         if(prevProps.categoriesRedux !== this.props.categoriesRedux){
             this.setState({
                 arrCategories: this.props.categoriesRedux
+            })
+        }if(prevProps.totalProducts !== this.props.totalProducts){
+            
+            let count = 0
+            this.props.totalProducts.map((item)=>{
+                count = count + 1
+            })
+            this.setState({
+                totalProducts: count
             })
         }
     }
@@ -85,15 +102,71 @@ class ProductManage extends Component {
 
         }
     }
-    render() {
-       
+    pageNext =()=>{
+        this.props.fetchProducts(this.state.currentPage +1)
+        this.setState({
+            currentPage: this.state.currentPage +1
+        })
+    }
+    pagePev = ()=>{
+        this.props.fetchProducts(this.state.currentPage -1)
+        this.setState({
+            currentPage: this.state.currentPage -1
+        })
+    }
+     render() {
+        
+        console.log(this.state.totalProducts,"akdskd")
+        const { orders, totalProducts, currentPage, pageSize } = this.state;
+        const pageCount = Math.ceil(totalProducts / pageSize);
         this.showImage()
         let arrProducts = this.state.arrProducts;
         // arrProducts.forEach(item => {
         //     console.log(item.image,"dslaflk")
         // });
         let arrCategories = this.state.arrCategories;
-        
+        let count = 0
+        arrProducts.map((item)=>{
+            count++
+        })
+        let pageButtons = []
+        for (let i = 1; i <= pageCount; i++) {
+            pageButtons.push(
+                <>{
+                    i === currentPage?
+                    <li class="page-item disabled">
+                    <button class="page-link"
+                    key={i}
+                    onClick={() => {this.props.fetchProducts(i)
+                        this.setState({
+                            currentPage: i
+                        })
+                    }  }
+                
+                >
+                {i}
+              </button></li>
+                    :
+                    <li class="page-item ">
+                    <button class="page-link"
+                    key={i}
+                    onClick={() => {this.props.fetchProducts(i)
+                        this.setState({
+                            currentPage: i
+                        })
+                    }  }
+                
+                >
+                {i}
+              </button></li>
+                }
+                 
+                </>
+               
+              
+            );
+           
+          }
         return (
             <div className="container products-container">
                 <ModalProducts
@@ -120,32 +193,32 @@ class ProductManage extends Component {
                 <table id="customers" class="ws-table-all px-5">
                     <tbody>
                         <tr>
-                            <th>Ảnh</th>
-                            <th>Tên sản phẩm</th>
-                            <th>Danh Mục</th>
-                            <th>Hãng sx</th>
-                            <th>Giá</th>
-                            <th>soLuong</th>
-                            <th>Sale</th>
-                            <th>Hot</th>
-                            <th>lượt xem</th>
-                            <th>lượt mua</th>
-                            <th>Action</th>
+                            <th className='anh  '>Ảnh</th>
+                            <th className='tenSp '>Tên sản phẩm</th>
+                            <th className='danhMuc manhinhdienthoai tablet'>Danh Mục</th>
+                            <th className='hangSX manhinhdienthoai tablet maytinh' >Hãng sx</th>
+                            <th  className='gia manhinhdienthoai'>Giá</th>
+                            <th className='soLuong manhinhdienthoai tablet maytinh'>soLuong</th>
+                            <th  className='sale manhinhdienthoai tablet maytinh'>Sale</th>
+                            <th className='hot manhinhdienthoai tablet maytinh'>Hot</th>
+                            <th className='luotXem manhinhdienthoai tablet maytinh'>lượt xem</th>
+                            <th className='luotMua manhinhdienthoai tablet maytinh'>lượt mua</th>
+                            <th className='action'>Action</th>
                         </tr>
                         {
                         arrProducts && arrProducts.map((item,index) =>{
                         return(
                             <>
                                 <tr>
-                                    <td style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+                                    <td className="image" style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
                                         {item.image&&
-                                        <img style={{width:'150px', maxHeight: "250px"}} src={this.showImage(item.image)}/> 
+                                        <img  src={this.showImage(item.image)}/> 
                                     }
                                     
                                     </td>
                                     
                                     <td>{item.tenSp}</td>
-                                    <td>
+                                    <td className="manhinhdienthoai tablet">
                                    { arrCategories && arrCategories.map((item2,index) =>{
                                         return(
                                             <>
@@ -154,13 +227,13 @@ class ProductManage extends Component {
                                             
                                         ) })}
                                     </td>
-                                    <td>{item.hangSx}</td>
-                                    <td>{this.price(item.giaSanPham)}</td>
-                                    <td>{item.soLuong}</td>
-                                    <td>{item.sale+ " %"}</td>
-                                    <td>{item.hot === 1? <i class="fas fa-check"></i>: ''}</td>
-                                    <td>{item.luotXem}</td>
-                                    <td>{item.luotMua}</td>
+                                    <td  className="manhinhdienthoai tablet maytinh">{item.hangSx}</td>
+                                    <td className="manhinhdienthoai">{this.price(item.giaSanPham)}</td>
+                                    <td className="manhinhdienthoai tablet maytinh">{item.soLuong}</td>
+                                    <td  className="manhinhdienthoai tablet maytinh">{item.sale+ " %"}</td>
+                                    <td  className="manhinhdienthoai tablet maytinh">{item.hot === 1? <i class="fas fa-check"></i>: ''}</td>
+                                    <td  className="manhinhdienthoai tablet maytinh">{item.luotXem}</td>
+                                    <td className="manhinhdienthoai tablet maytinh">{item.luotMua}</td>
                                     <td className='action'>
                                     <button onClick={()=>this.handleEditProducts(item)} class="btn btn-success mx-1 px-2 ">Edit</button>
                                     <button onClick={()=>this.handleDeleteProducts(item.id)} class="btn btn-danger  px-2">Delete</button>
@@ -176,7 +249,36 @@ class ProductManage extends Component {
                         
                         
                     </tbody></table>
+                    <div className='pagination ' style={{marginTop:"10px"}}>
                    
+                    
+                    
+                    <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            {this.state.currentPage === 1?
+                                 <li class="page-item disabled">
+                                 <button class="page-link">Trang trước</button>
+                                 </li>
+                            :
+                            <li class="page-item ">
+                                 <button class="page-link"  onClick={() =>this.pagePev()} >Trang trước</button>
+                                 </li>
+                            }
+                            {pageButtons}
+                            
+                            {count < 5?
+                                 <li class="page-item disabled">
+                                 <button class="page-link">Next</button>
+                                 </li>
+                            :   
+                                <li class="page-item ">
+                                 <button class="page-link" onClick={() => this.pageNext()}>Next</button>
+                                 </li>
+                            }
+                           
+                        </ul>
+                    </nav>
+                </div>
                 </div>
             </div>
         )
@@ -185,10 +287,12 @@ class ProductManage extends Component {
 }
 
 const mapStateToProps = state => {
-    console.log(state.admin.products,"sd;fka;df")
+ 
     return {
         productsRedux: state.admin.products,
+        totalProducts: state.admin.totalProducts,
         categoriesRedux: state.admin.categories,
+        categorietotalProductssRedux: state.admin.totalProducts,
         
     };
 };
@@ -196,7 +300,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
         getCategoriesStart: ()=> dispatch(actions.fetchCategoriesStart()),
-        fetchProducts: ()=> dispatch(actions.fetchProducts()),
+        fetchProducts: (page)=> dispatch(actions.fetchProducts(page)),
         DeleteProducts: (id)=> dispatch(actions.DeleteProducts(id)),
         // getCategoriesStart: ()=> dispatch(actions.fetchCategoriesStart())
         // processLogout: () => dispatch(actions.processLogout()),

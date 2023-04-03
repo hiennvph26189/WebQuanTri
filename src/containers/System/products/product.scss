@@ -26,3 +26,82 @@
     }
     
 }
+
+tr{
+    .image{
+        img{
+            width:150px  
+        }
+    }
+} 
+.flexNewEdit{
+    display: flex;
+}
+.tenSp{
+    width: 250px
+}
+@media screen and (max-width: 480px){
+    .manhinhdienthoai{
+        display: none;
+    }
+    .flexNewEdit{
+        display: block;
+    }
+    tr{
+        .image{
+            img{
+                width:100px  
+            }
+        }
+    }
+    .sale{
+        
+    }
+    .danhMuc{
+
+    }
+    .hangSX{
+
+    }
+    .gia{
+
+    }
+    .soLuong{
+
+    }
+    .luotXem{
+
+    }
+    
+}
+@media screen and (max-width: 768px){
+    .tablet{
+        display: none !important;;
+    }
+    tr{
+        .image{
+            img{
+                width:120px  
+            }
+        }
+    }
+    .flexNewEdit{
+        display: block;
+    }
+}
+@media screen and (max-width: 1024px){
+    .anh {
+        width: 120px;
+    }
+    .maytinh{
+        display: none !important;;
+    }
+    tr{
+        .image{
+            img{
+                width:120px  
+            }
+        }
+    }
+    
+}

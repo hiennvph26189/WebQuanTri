@@ -6,6 +6,7 @@ import ProductManage from '../containers/System/products/ProductManage';
 import Categories from '../containers/System/Categories';
 import Members from '../containers/System/members/Members';
 import OrdersManage from '../containers/System/orders/OrdersManage';
+import ThongKeManage from '../containers/System/thongKe/ThongKeManage';
 
 import Header from '../containers/Header/Header';
 class System extends Component {
@@ -19,6 +20,7 @@ class System extends Component {
                 <div className="system-list">
                     <Switch>
                         <Route path="/system/user-manage" component={UserManage} />
+                        <Route path="/system/thong-ke" component={ThongKeManage} />
                         <Route path="/system/user-member" component={Members} />
                         <Route path="/system/product-manage" component={ProductManage} />
                         <Route path="/system/order-manage" component={OrdersManage} />

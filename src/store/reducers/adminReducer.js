@@ -8,6 +8,7 @@ const initialState = {
     orders:[],
     carts:[],
     priceMembers: [],
+    totalProducts:[]
 
 }
 
@@ -43,6 +44,8 @@ const adminReducer = (state = initialState, action) => {
 
         case actionTypes.FETCH_PRODUCTS_SUCCESS:
             state.products =  action.data
+            console.log(action.totalProducts,"success")
+            state.totalProducts =  action.totalProducts
             console.log('FETCH_PRODUCTS_SUCCESS', action)
             return {
                 ...state

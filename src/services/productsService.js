@@ -1,6 +1,6 @@
 import axios  from "../axios";
-const getAllProducts = ()=>{
-    return axios.get(`/api/get-all-product`)
+const getAllProducts = (page)=>{
+    return axios.get(`/api/get-all-product?page=${page}`)
 }
 const createNewProductsService = (data)=>{
     return axios.post(`/api/add-product`,data)
