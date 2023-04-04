@@ -219,7 +219,7 @@ const mapStateToProps = state => {
     return {
         ordersRedux: state.admin.orders,
         cartsRedux: state.admin.carts,
-        productsRedux: state.admin.products,
+        productsRedux: state.admin.allProducts,
         members: state.admin.members,
     };
 };
@@ -228,7 +228,7 @@ const mapDispatchToProps = dispatch => {
     
     return {
         fetchOrderProducts: ()=> dispatch(actions.fetchOrderProducts()),
-        fetchProducts: ()=> dispatch(actions.fetchProducts()),
+        fetchProducts: ()=> dispatch(actions.fetchAllProducts()),
         fetchMembers: ()=> dispatch(actions.fetchMembers()),
         deleteOrderCart: (id)=> dispatch(actions.deleteOrderCart(id))
     };

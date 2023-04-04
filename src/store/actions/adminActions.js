@@ -1,5 +1,5 @@
 import actionTypes from './actionTypes';
-import { getAllProducts,createNewProductsService,uploadImage,deleteProductsService,editProductsService, } from '../../services/productsService';
+import { getAllProducts,createNewProductsService,uploadImage,deleteProductsService,editProductsService,getAllTotalProducts } from '../../services/productsService';
 import { getAllMembers,getLichSuNap,editMembersPrices,editHuyPricesMembers } from '../../services/membersService';
 import { getAllOrders ,huyOrdersSucces,checkOrderService,GiaoDonService,deleteOrderService} from '../../services/OrdersService';
 import { toast } from 'react-toastify';
@@ -10,7 +10,8 @@ export const fetchCategoriesStart = () => {
     return async(dispatch,getState)=>{
         try {
             dispatch({type: actionTypes.FETCH_CATEGORIES_START})
-            let res = await getAllProducts()
+            let res = await getAllTotalProducts()
+            console.log(res,"response")
             if(res && res.errCode === 0){
                
                 dispatch(fetchCategoriesSuccess(res.categories))
@@ -41,7 +42,7 @@ export const createNewProducts = (data) => {
             if(res && res.errCode === 0){
                 toast.success("Thêm mới sản phẩm thành công")
                 dispatch(createNewProductsSuccess())
-                dispatch(fetchProducts())
+                dispatch(fetchProducts(1))
             }else{
                 dispatch( createNewProductsFailed())
             }
@@ -71,8 +72,8 @@ export const fetchProducts = (page) => {
             let res = await getAllProducts(page)
             if(res && res.errCode === 0){
               
-                // console.log(res.totalProducts,"ads;akdf")
-                dispatch(fetchProductsSuccess(res.products.reverse() ,res.totalProducts.reverse()) )
+                console.log(res.products,"hien2")
+                dispatch(fetchProductsSuccess(res.products ,res.totalProducts) )
             }else{
                 dispatch(fetchProductsFailed())
             }
@@ -91,9 +92,36 @@ export const fetchProductsSuccess = (getProducts,totalProducts) => ({
 export const fetchProductsFailed = () => ({
     type: actionTypes.FETCH_PRODUCTS_FAILED,
 })
+export const fetchAllProducts = () => {
+    return async(dispatch,getState)=>{
+        try {
+           
+            let res = await getAllTotalProducts()
+            if(res && res.errCode === 0){
+              
+                // console.log(res.totalProducts,"ads;akdf")
+                dispatch(fetchAllProductsSuccess(res.totalProducts.reverse()))
+            }else{
+                dispatch(fetchAllProductsFailed())
+            }
+        } catch (error) {
+            dispatch(fetchAllProductsFailed())
+            console.log("fetchAllProductsFailed ",error)
+        }
+    }
+   
+}
+export const fetchAllProductsSuccess = (getProducts) => ({
+    type: actionTypes.FETCH_ALL_PRODUCTS_SUCCESS,
+    data: getProducts,
+   
+})
+export const fetchAllProductsFailed = () => ({
+    type: actionTypes.FETCH_ALL_PRODUCTS_FAILED,
+})
 
 
-export const DeleteProducts = (id) => {
+export const DeleteProducts = (id,page) => {
     return async(dispatch,getState)=>{
         try {
             
@@ -101,7 +129,7 @@ export const DeleteProducts = (id) => {
             if(res && res.errCode === 0){
                 toast.success("Xóa sản phẩm thành công")
                 dispatch(deleteProductsSuccess())
-                dispatch(fetchProducts())
+                dispatch(fetchProducts(page))
             }else{
                 dispatch( deleteNewProductsFailed())
             }
@@ -133,7 +161,7 @@ export const updateProducts = (data) => {
                 
                 toast.success("Sửa sản phẩm thành công")
                 dispatch(updateProductsSuccess())
-                dispatch(fetchProducts())
+                dispatch(fetchProducts(data.page))
             }else{
                 dispatch( updateProductsFailed())
             }

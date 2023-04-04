@@ -24,6 +24,7 @@ class ModalEditProducts extends Component {
            hangSx: '',
            giaSanPham: '',
            idDanhSach: '',
+           giaNhap: '',
            hot: false,
            sale: 0,
            soLuong: 0,
@@ -70,6 +71,7 @@ class ModalEditProducts extends Component {
                 hot: products.hot === 1?true:false,
                 sale: products.sale,
                 soLuong: products.soLuong,
+                giaNhap: products.giaNhap,
                 mota: products.mota,
                 id: products.id,
                
@@ -93,7 +95,7 @@ class ModalEditProducts extends Component {
     }
     checkValidateInput = ()=>{
         let isValid = true;
-        let arrInput = ['tenSp','hangSx','giaSanPham','idDanhSach','mota']
+        let arrInput = ['tenSp','hangSx','giaSanPham','giaNhap','idDanhSach','mota']
         for (let i = 0; i < arrInput.length;i++){
             if(!this.state[arrInput[i]]){
                 isValid  = false;
@@ -115,9 +117,11 @@ class ModalEditProducts extends Component {
                 hot: this.state.hot?1:0,
                 sale: this.state.sale,
                 mota: this.state.mota,
+                giaNhap: this.state.giaNhap,
                 soLuong: this.state.soLuong,
                 id: this.state.id,
-                image: JSON.stringify(this.state.file)
+                image: JSON.stringify(this.state.file),
+                page:this.props.page
 
             })
             this.setState({
@@ -129,6 +133,7 @@ class ModalEditProducts extends Component {
                 hot: false,
                 sale: 0,
                 privewImageUrl: '',
+                giaNhap: 0,
                 sale: 0,
                 mota: "",
                 id: '',
@@ -267,6 +272,10 @@ class ModalEditProducts extends Component {
                             <div className='col-12 form-group mg-top'>
                                 <label>Hãng sản xuất</label>
                                 <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'hangSx')} name="hangSx" value={this.state.hangSx}/>
+                            </div>
+                            <div className='col-12 form-group mg-top'>
+                                <label>Giá nhập</label>
+                                <input type="nnumber" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'giaNhap')} name="giaNhap" value={this.state.giaNhap}/>
                             </div>
                             
                             <div className=' col-12 flexNewEdit'>

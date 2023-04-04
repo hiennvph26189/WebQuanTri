@@ -2,6 +2,9 @@ import axios  from "../axios";
 const getAllProducts = (page)=>{
     return axios.get(`/api/get-all-product?page=${page}`)
 }
+const getAllTotalProducts = ()=>{
+    return axios.get(`/api/get-all-total-product`)
+}
 const createNewProductsService = (data)=>{
     return axios.post(`/api/add-product`,data)
 }
@@ -20,5 +23,6 @@ export{
     createNewProductsService,
     deleteProductsService,
     editProductsService,
-    uploadImage
+    uploadImage,
+    getAllTotalProducts
 };

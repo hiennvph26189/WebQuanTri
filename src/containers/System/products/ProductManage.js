@@ -23,6 +23,7 @@ class ProductManage extends Component {
             totalProducts: 0,
             // currentPage: 1,
             pageSize: 5,
+            
         }
        }
      
@@ -50,6 +51,7 @@ class ProductManage extends Component {
     componentDidUpdate(prevProps, prevState,snapshot) {
         //console.log(prevProps.productsRedux,'prevProps')
         if(prevProps.productsRedux !== this.props.productsRedux){
+            console.log(this.props.productsRedux,"Ngueyenx")
             this.setState({
                 arrProducts: this.props.productsRedux
             })
@@ -77,13 +79,14 @@ class ProductManage extends Component {
     handleDeleteProducts = (id)=>{
         if(id){
             console.log(id,"adflakf;akf;ahd;f")
-            this.props.DeleteProducts(id)
+            this.props.DeleteProducts(id,this.state.currentPage)
         }
     }
     handleEditProducts=(product)=>{
         this.setState({
             isOpenEditProductsModal: true,
-            productsEdit: product
+            productsEdit: product,
+
         })
        
         
@@ -180,6 +183,7 @@ class ProductManage extends Component {
                     isOpen = {this.state.isOpenEditProductsModal}
                     toggleFromParent = {this.toggleEditProductsModal}
                     currentProducts = {this.state.productsEdit}
+                    page = {this.state.currentPage}
                      
                 />
                     
@@ -193,6 +197,7 @@ class ProductManage extends Component {
                 <table id="customers" class="ws-table-all px-5">
                     <tbody>
                         <tr>
+                            <th style={{width:"50px"}}>#</th>
                             <th className='anh  '>Ảnh</th>
                             <th className='tenSp '>Tên sản phẩm</th>
                             <th className='danhMuc manhinhdienthoai tablet'>Danh Mục</th>
@@ -209,7 +214,9 @@ class ProductManage extends Component {
                         arrProducts && arrProducts.map((item,index) =>{
                         return(
                             <>
+
                                 <tr>
+                                    <td>{index+1}</td>
                                     <td className="image" style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
                                         {item.image&&
                                         <img  src={this.showImage(item.image)}/> 
@@ -257,11 +264,11 @@ class ProductManage extends Component {
                         <ul class="pagination justify-content-center">
                             {this.state.currentPage === 1?
                                  <li class="page-item disabled">
-                                 <button class="page-link">Trang trước</button>
+                                 <button class="page-link" tabindex="-1">Previous</button>
                                  </li>
                             :
                             <li class="page-item ">
-                                 <button class="page-link"  onClick={() =>this.pagePev()} >Trang trước</button>
+                                 <button class="page-link"  onClick={() =>this.pagePev()} >Previous</button>
                                  </li>
                             }
                             {pageButtons}
@@ -287,12 +294,12 @@ class ProductManage extends Component {
 }
 
 const mapStateToProps = state => {
- 
+   
     return {
         productsRedux: state.admin.products,
         totalProducts: state.admin.totalProducts,
         categoriesRedux: state.admin.categories,
-        categorietotalProductssRedux: state.admin.totalProducts,
+        // categorietotalProductssRedux: state.admin.totalProducts,
         
     };
 };
@@ -301,7 +308,7 @@ const mapDispatchToProps = dispatch => {
     return {
         getCategoriesStart: ()=> dispatch(actions.fetchCategoriesStart()),
         fetchProducts: (page)=> dispatch(actions.fetchProducts(page)),
-        DeleteProducts: (id)=> dispatch(actions.DeleteProducts(id)),
+        DeleteProducts: (id,page)=> dispatch(actions.DeleteProducts(id,page)),
         // getCategoriesStart: ()=> dispatch(actions.fetchCategoriesStart())
         // processLogout: () => dispatch(actions.processLogout()),
     };

@@ -30,6 +30,7 @@ class ModalProducts extends Component {
            soLuong: 0,
            giaSanPham: '',
            idDanhSach: '',
+           giaNhap: '',
            hot: false,
            sale: 0,
            image: "",
@@ -75,7 +76,7 @@ class ModalProducts extends Component {
     }
     checkValidateInput = ()=>{
         let isValid = true;
-        let arrInput = ['tenSp','hangSx','giaSanPham','idDanhSach','mota','soLuong']
+        let arrInput = ['tenSp','hangSx','giaSanPham','idDanhSach','giaNhap','mota','soLuong']
         for (let i = 0; i < arrInput.length;i++){
             if(!this.state[arrInput[i]]){
                 isValid  = false;
@@ -97,6 +98,7 @@ class ModalProducts extends Component {
                 hot: this.state.hot?1:0,
                 sale: this.state.sale,
                 soLuong: this.state.soLuong,
+                giaNhap: this.state.giaNhap,
                 mota: this.state.mota,
                 image:  JSON.stringify(this.state.file)
 
@@ -112,6 +114,7 @@ class ModalProducts extends Component {
                 privewImageUrl: '',
                 sale: 0,
                 soLuong: 0,
+                giaNhap: 0,
                 mota: "",
                 image: '',
                 file:[],
@@ -212,7 +215,7 @@ class ModalProducts extends Component {
         for(let i = 0; i<=url.length;i++){
             lenghtImage = url.length
         }
-        console.log(lenghtImage)
+        console.log(arrCategories,';adk;fkds')
 
         // console.log(arrCategories,"sdaljfla")
         // console.log(this.props.isLoading)
@@ -237,6 +240,10 @@ class ModalProducts extends Component {
                             <div className='col-12 form-group mg-top'>
                                 <label>Hãng sản xuất</label>
                                 <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'hangSx')} name="hangSx" value={this.state.hangSx}/>
+                            </div>
+                            <div className='col-6 form-group mg-top'>
+                                <label>Giá nhập</label>
+                                <input type="number" className="form-control" placeholder='Giá nhập vào' onChange={(event)=>this.handleOnChageInput(event,'giaNhap')} name="giaNhap" value={this.state.giaNhap}/>
                             </div>
                             
                             <div className=' col-12 flexNewEdit'>
@@ -365,6 +372,7 @@ class ModalProducts extends Component {
 }
 
 const mapStateToProps = state => {
+    console.log(state.admin.categories,"ald;dskf")
     return {
         categoriesRedux: state.admin.categories,
         isLoading: state.admin.isLoading
@@ -375,7 +383,7 @@ const mapDispatchToProps = dispatch => {
     return {
         getCategoriesStart: ()=> dispatch(actions.fetchCategoriesStart()),
         createNewProducts: (data)=> dispatch(actions.createNewProducts(data)),
-        fetchProducts: ()=> dispatch(actions.fetchProducts()),
+        fetchAllProducts: ()=> dispatch(actions.fetchAllProducts()),
         createNewImage: (data)=> dispatch(actions.createNewImage(data)),
     };
 };
