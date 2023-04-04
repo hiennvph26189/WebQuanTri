@@ -344,11 +344,11 @@ export const updateHuyMembersPriceFailed = () => ({
     type: actionTypes.HUY_PRICES_FAILED,
 })
 
-export const fetchOrderProducts = () => {
+export const fetchOrderProducts = (status) => {
     return async(dispatch,getState)=>{
        
         try {
-            let res = await getAllOrders()
+            let res = await getAllOrders(status)
               
             if(res && res.errCode === 0){
                 dispatch(fetchOrderProductsSuccess(res.getAllOrder,res.getCarts))
@@ -385,7 +385,7 @@ export const HuyOrderCart = (data) => {
                 toast.success("Hủy thành công")
                 // dispatch(updateHuyOrderSuccess())
                 dispatch(HuyOrderSuccess())
-                dispatch(fetchOrderProducts())
+                dispatch(fetchOrderProducts(data.status))
             }else{
                 dispatch(HuyOrderFailed())
             }
@@ -417,7 +417,7 @@ export const checkOrderCart = (data) => {
                 toast.success("Đã xác nhận đơn hàng")
                 // dispatch(updateHuyOrderSuccess())
                 dispatch(checkOrderSuccess())
-                dispatch(fetchOrderProducts())
+                dispatch(fetchOrderProducts(data.status))
             }else{
                 dispatch(checkOrderFailed())
             }
@@ -448,7 +448,7 @@ export const giaoOrderCart = (data) => {
                 toast.success("Đã giao đơn thành công")
                 // dispatch(updateHuyOrderSuccess())
                 dispatch(giaoOrderSuccess())
-                dispatch(fetchOrderProducts())
+                dispatch(fetchOrderProducts(data.statuss))
             }else{
                 dispatch(giaoOrderFailed())
             }
@@ -468,7 +468,7 @@ export const giaoOrderSuccess = () => ({
 export const giaoOrderFailed = () => ({
     type: actionTypes.GIAO_ORDERS_FAILED,
 })
-export const deleteOrderCart = (id) => {
+export const deleteOrderCart = (id,status) => {
     return async(dispatch,getState)=>{
        
         try {
@@ -479,7 +479,7 @@ export const deleteOrderCart = (id) => {
                 toast.success("Đã giao đơn thành công")
                 // dispatch(updateHuyOrderSuccess())
                 dispatch(deleteOrderSuccess())
-                dispatch(fetchOrderProducts())
+                dispatch(fetchOrderProducts(status))
             }else{
                 dispatch(deleteOrderFailed())
             }

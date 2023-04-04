@@ -1,6 +1,6 @@
 import axios  from "../axios";
-const getAllOrders = ()=>{
-    return axios.get(`/api/get-all-orders-product`)
+const getAllOrders = (status)=>{
+    return axios.get(`/api/get-all-orders-product?status=${status}`)
 }
 const huyOrdersSucces = (data)=>{
     return axios.put(`/api/huy-orders-success-product`,data)

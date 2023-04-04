@@ -197,7 +197,7 @@ class ProductManage extends Component {
                 <table id="customers" class="ws-table-all px-5">
                     <tbody>
                         <tr>
-                            <th style={{width:"50px"}}>#</th>
+                          
                             <th className='anh  '>Ảnh</th>
                             <th className='tenSp '>Tên sản phẩm</th>
                             <th className='danhMuc manhinhdienthoai tablet'>Danh Mục</th>
@@ -216,7 +216,7 @@ class ProductManage extends Component {
                             <>
 
                                 <tr>
-                                    <td>{index+1}</td>
+                                    
                                     <td className="image" style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
                                         {item.image&&
                                         <img  src={this.showImage(item.image)}/> 

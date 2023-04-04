@@ -7,6 +7,7 @@ import Categories from '../containers/System/Categories';
 import Members from '../containers/System/members/Members';
 import OrdersManage from '../containers/System/orders/OrdersManage';
 import ThongKeManage from '../containers/System/thongKe/ThongKeManage';
+import NewsManage from '../containers/System/news/NewsManage';
 
 import Header from '../containers/Header/Header';
 class System extends Component {
@@ -23,8 +24,10 @@ class System extends Component {
                         <Route path="/system/thong-ke" component={ThongKeManage} />
                         <Route path="/system/user-member" component={Members} />
                         <Route path="/system/product-manage" component={ProductManage} />
+                        
                         <Route path="/system/order-manage" component={OrdersManage} />
                         <Route path="/system/categories" component={Categories} />
+                        <Route path="/system/news-manage" component={NewsManage} />
                         <Route component={() => { return (<Redirect to={systemMenuPath} />) }} />
                     </Switch>
                 </div>

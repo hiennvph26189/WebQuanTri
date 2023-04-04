@@ -314,15 +314,18 @@ class ModalEditOrder extends Component {
             id: this.state.idOrder,
             arrCarts:JSON.stringify(this.state.idCart),
             idUser: this.state.idUser,
-            tongTien: this.state.tongTien
+            tongTien: this.state.tongTien,
+            status: this.props.status
         })
         this.toggle()
     }
     handleXacNhanDatDon = ()=>{
+        console.log(this.props.status.status)
         this.props.checkOrderCart({
             id: this.state.idOrder,
             arrCarts:JSON.stringify(this.state.idCart),
             idUser: this.state.idUser,
+            status: this.props.status
             
         })
         this.toggle()
@@ -331,7 +334,9 @@ class ModalEditOrder extends Component {
         if(id&&status){
             this.props.giaoOrderCart({
                 id: id,
-                status: status
+                status: status,
+                statuss: this.props.status
+                
             })
             this.toggle()
         }
@@ -418,12 +423,12 @@ class ModalEditOrder extends Component {
                 </ModalBody>
                 <ModalFooter>
                 {
-                   this.state.status === 0 && <Button color="warning" className='px-2' onClick={()=>this.handleXacNhanDatDon()}>  Xác nhận đơn </Button>
+                   this.state.status === 0 && <Button color="warning" className='px-2' onClick={()=>this.handleEditMembers(this.state.idOrder,1)}>  Xác nhận đơn </Button>
                  
                
                 }{' '}
                  {
-                   this.state.status === 1 && <Button color="info" className='px-2' onClick={()=>this.handleEditMembers(this.state.idOrder,2)}>   Giao đơn </Button>
+                   this.state.status === 1 && <Button color="info" className='px-2' onClick={()=>this.handleXacNhanDatDon()}>   Giao đơn </Button>
                  
                
                 }{' '}

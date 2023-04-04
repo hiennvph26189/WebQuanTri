@@ -22,7 +22,8 @@ class OrdersManage extends Component {
             arrProducts:[],
             arrMembers:[],
             isOpenEditOrderModal: false,
-            itemEditOrder: {}
+            itemEditOrder: {},
+            status: "All"
 
         }
         
@@ -30,7 +31,7 @@ class OrdersManage extends Component {
 
    
     async componentDidMount() {
-        this.props.fetchOrderProducts()
+        this.props.fetchOrderProducts(this.state.status)
         this.props.fetchProducts()
         this.props.fetchMembers()
         
@@ -137,8 +138,17 @@ class OrdersManage extends Component {
     } 
     handleDeleteOrderCart=(id)=>{
         if(id){
-            this.props.deleteOrderCart(id)
+            this.props.deleteOrderCart(id,this.state.status)
         }
+    }
+    handleOnChageInput = (event) => {
+        // console.log(event.target.value,id)
+       
+        this.setState({
+           status: event.target.value
+        })
+        this.props.fetchOrderProducts(event.target.value)
+        
     }
     render() {
        console.log(this.state.arrMembers,"Members")
@@ -154,6 +164,7 @@ class OrdersManage extends Component {
                     arrMembers = {this.state.arrMembers}
                     arrProducts = {this.state.arrProducts}
                     arrCarts = {this.state.arrCarts}
+                    status = {this.state.status}
                    
 
                  
@@ -163,8 +174,17 @@ class OrdersManage extends Component {
                
                  
                 <div className='title text-center'> Read Orders</div>
-                <div className='mx-2'>
-                    <button className='btn btn-primary px-2' onClick={()=>this.handleAddNewOrder()}> <i className='fas fa-plus px-2'></i>Add new category</button>
+                <div className='col-3 form-group mg-top'>
+             
+                    <select name="roleID" class="form-control" onChange={(event)=>this.handleOnChageInput(event)} value={this.state.status}>
+                    <option selected value="All">Xem tất cả </option>
+                    <option  value="0">Chờ xét duyệt</option>
+                    <option value="1">Đã Xác nhận đơn hàng</option>
+                    <option value="2">Đang giao hàng</option>
+                    <option value="3">Giao thành công </option>
+                    <option value="4">Đơn chờ hủy</option>
+                    <option value="5">Đơn đã hủy</option>
+                    </select>
                 </div>
                 <div className='category-table mt-4 mx-2'>
                 <table id="customers" class="ws-table-all">
@@ -227,10 +247,10 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     
     return {
-        fetchOrderProducts: ()=> dispatch(actions.fetchOrderProducts()),
+        fetchOrderProducts: (status)=> dispatch(actions.fetchOrderProducts(status)),
         fetchProducts: ()=> dispatch(actions.fetchAllProducts()),
         fetchMembers: ()=> dispatch(actions.fetchMembers()),
-        deleteOrderCart: (id)=> dispatch(actions.deleteOrderCart(id))
+        deleteOrderCart: (id,status)=> dispatch(actions.deleteOrderCart(id,status))
     };
 };
 
