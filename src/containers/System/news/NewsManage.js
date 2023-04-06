@@ -3,6 +3,12 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import ModalNews from './ModalNews';
 import ModalEditNews from './ModalEditNews';
+import {getAllNews,addNewsService,deleteNewsService} from "../../../services/newService"
+import axios from 'axios';
+import Moment from 'moment';
+import vi from "moment/locale/vi";
+import fr from "moment/locale/fr";
+import { toast } from 'react-toastify';
 class NewsManage extends Component {
 
     constructor(props) {
@@ -10,13 +16,32 @@ class NewsManage extends Component {
         this.state = {
             isOpenModal: false,
             isOpenEditNewsModal: false,
+            arrNews: [],
+            itemNew : {}
         }
 
     }
-
+    async componentDidMount() {
+        await this.getAllNews();
+        
+     }
+    getAllNews = async()=>{
+        let data = await getAllNews()
+        if(data.errCode === 0){
+            this.setState({
+                arrNews: data.news
+            })
+        }
+    }
     handleAddNewNews = ()=>{
         this.setState({
-            isOpenModal: true
+            isOpenModal: true 
+        })
+    }
+    handleEditCategory = (item)=>{
+        this.setState({
+            isOpenEditNewsModal: true ,
+            itemNew:item
         })
     }
     toggleNewsModal = ()=>{
@@ -29,8 +54,21 @@ class NewsManage extends Component {
             isOpenEditNewsModal: !this.state.isOpenEditNewsModal
         })
     }
-
+    formatDate= (date)=>{
+        const newFr = Moment(date).locale("vi", fr).format("DD/MM/YYYY HH:mm:ss");
+        return newFr
+    }
+    handleDeleteCategory = async(id)=>{
+        if(id){
+            await  deleteNewsService(id)
+            toast.success("Đã Xóa tin tức")
+            this.getAllNews()
+        }
+    }
     render() {
+        console.log(this.state.arrNews,"aks;dakds")
+        let arrNews = this.state.arrNews
+
         return (
             <div className="container News-container">
                 <ModalNews
@@ -38,13 +76,16 @@ class NewsManage extends Component {
                     test = {'abc'}
                     toggleFromParent = {this.toggleNewsModal}
                     createNewNews = {this.createNewNews}
+                    loadNews = {this.getAllNews}
                 />
                 {this.state.isOpenEditNewsModal &&
                     <ModalEditNews
                     isOpen = {this.state.isOpenEditNewsModal}
                     toggleFromParent = {this.toggleEditNewsModal}
-                    currentNews = {this.state.NewsEdit}
-                     EditNews = {this.doEditNews}
+                    currentNews = {this.state.itemNew}
+                    loadNews = {this.getAllNews}
+                    
+
                 />
                     
                 }
@@ -63,9 +104,33 @@ class NewsManage extends Component {
                         <th style={{width:"250px"}}>Ngày đăng</th>
                         <th style={{width:"170px"}}>Chỉnh sửa</th>
                     </tr>
-                    
+                    {
+                        arrNews && arrNews.map((item,index) =>{
+                        return(
+                            <>
+                                <tr>
+                                <td className="image" style={{display:'flex',justifyContent:'center',alignItems:'center'}}>
+                                        {item.anhTinTuc&&
+                                        <img  src={item.anhTinTuc}/> 
+                                    }
+                                    
+                                    </td>
+                                    
+                                    <td>{item.tieuDe}</td>
+                                    <td>{this.formatDate(item.createdAt)}</td>
+                                   
+                                    <td className='action'>
+                                    <button onClick={()=>this.handleEditCategory(item)} class="btn btn-success mx-1 px-2 ">Edit</button>
+                                    <button onClick={()=>this.handleDeleteCategory(item.id)} class="btn btn-danger  px-2">Delete</button>
+                                    </td>
+                                </tr>
+                            </>
+                        )
+                         
+                    })}
   
-                </tbody></table>
+                </tbody>
+            </table>
             </div>
         </div>
         )
