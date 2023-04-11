@@ -72,7 +72,7 @@ class ModalEditUser extends Component {
         
     }
     render() {
-        
+        let roleId = this.props.userInfo.roleID
         return (
             
         <Modal 
@@ -111,6 +111,7 @@ class ModalEditUser extends Component {
                                     <input type="number" className="form-control" placeholder='Số điện thoại' name="phoneNumber" onChange={(event)=>this.handleOnChageInput(event,'phoneNumber')} value={this.state.phoneNumber}/>
                                 </div>
                             </div>
+                            {roleId===1&&
                             <div className='col-6 form-group mg-top'>
                             <label for="inputState">Role ID</label>
                             {this.state.roleID =="" &&
@@ -148,13 +149,17 @@ class ModalEditUser extends Component {
                             
                                 
                             </div>
+                            }
                         </div>
                     </div>
                 </ModalBody>
                 <ModalFooter>
-                <Button color="success" className='px-2' onClick={()=>this.handleSaveUser()}>
-                    Save
-                </Button>{' '}
+                    {roleId===1&&
+                          <Button color="success" className='px-2' onClick={()=>this.handleSaveUser()}>
+                          Save
+                      </Button>
+                    }
+              {' '}
                 <Button color="danger" className='px-2' onClick={()=>this.toggle()}>
                     Cancel
                 </Button>
@@ -167,6 +172,7 @@ class ModalEditUser extends Component {
 
 const mapStateToProps = state => {
     return {
+        userInfo: state.user.userInfo,
     };
 };
 

@@ -138,6 +138,7 @@ class Navigator extends Component {
         const { menus, location } = this.props;
         outerLoop:
         for (let i = 0; i < menus.length; i++) {
+            
             const group = menus[i];
             if (group.menus && group.menus.length > 0) {
                 for (let j = 0; j < group.menus.length; j++) {

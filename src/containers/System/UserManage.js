@@ -73,7 +73,7 @@ class UserManage extends Component {
             console.log(error)
         }
        
-        console.log("data",data)
+        
     }
     handleDeleteUser = async(id)=>{
         try {
@@ -113,8 +113,9 @@ class UserManage extends Component {
         }
     }
     render() {
-        let roleID =  this.state.roleID
-        console.log(roleID, " đầ")
+       console.log(this.props.userInfo)
+       let roleId = this.props.userInfo.roleID
+       console.log(roleId,"s'alsfads")
        let arrUsers  = this.state.arrUsers
      
         return (
@@ -137,7 +138,10 @@ class UserManage extends Component {
                  
                 <div className='title text-center'> Read Users</div>
                 <div className='mx-2'>
+                {
+                    roleId===1&&
                     <button className='btn btn-primary px-2' onClick={()=>this.handleAddNewUser()}> <i className='fas fa-plus px-2'></i>Add new user</button>
+                }
                 </div>
                 <div className='user-table mt-4 mx-2'>
                 <table id="customers" class="ws-table-all">
@@ -175,8 +179,12 @@ class UserManage extends Component {
                                         }
                                     </td>
                                     <td className='action'>
+                                        
                                     <button onClick={()=>this.handleEditUser(item)} class="btn btn-success mx-1 px-2 ">Edit</button>
+                                    {
+                                    roleId===1&&
                                     <button  onClick={()=>this.handleDeleteUser(item.id)} class="btn btn-danger  px-2">Delete</button>
+                                    }
                                     </td>
                                 </tr>
                             </>
@@ -192,7 +200,9 @@ class UserManage extends Component {
 }
 
 const mapStateToProps = state => {
+    console.log(state.user.userInfo,"ld;adsf")
     return {
+        userInfo: state.user.userInfo,
     };
 };
 

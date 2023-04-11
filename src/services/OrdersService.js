@@ -14,22 +14,25 @@ const GiaoDonService = (data)=>{
 const deleteOrderService = (id)=>{
     return axios.delete(`/api/delete-orders?id=${id}`)
 }
-// const createNewCategories = (data)=>{
-//     return axios.post(`/api/add-categories`,data)
-// }
-// const deleteCategoriesService = (id)=>{  
-//     return axios.delete(`/api/delete-categories`,{data:{id:id}})
-// }
-// const editCategoriesService = (imputData)=>{
-//     return axios.put(`/api/edit-categories`,imputData)
-// }
+const thongKeOrders = (data)=>{
+    if(data.key === 0){
+        console.log(data)
+        return axios.get(`/api/thong-ke-orders?nam=${data.nam}&&thang=${data.thang}&&key=${data.key}`)
+    }else if(data.key === 2){
+        return axios.get(`/api/thong-ke-orders?tuNgay=${data.tuNgay}&&denNgay=${data.denNgay}&&key=${data.key}`)
+    }else if(data.key === 1){
+        return axios.get(`/api/thong-ke-orders?ngay=${data.ngay}&&key=${data.key}`)
+    }
+    
+    
+}
+
 export  {
     getAllOrders,
     huyOrdersSucces,
     checkOrderService,
     GiaoDonService,
-    deleteOrderService
-    // createNewCategories,
-    // deleteCategoriesService,
-    // editCategoriesService
+    deleteOrderService,
+    thongKeOrders
+   
 };

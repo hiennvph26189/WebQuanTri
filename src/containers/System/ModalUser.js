@@ -157,6 +157,7 @@ class ModalUser extends Component {
 
 const mapStateToProps = state => {
     return {
+        
     };
 };
 

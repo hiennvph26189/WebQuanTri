@@ -8,16 +8,19 @@ import './Header.scss';
 
 class Header extends Component {
 
+
     render() {
         const { processLogout } = this.props;
         console.log(this.props.userInfo)
         const userInfo = this.props.userInfo
         const Name =   this.props.userInfo.firstName + " "+this.props.userInfo.lastName
+        const roleId = userInfo.roleID
         return (
             <div className="header-container">
                 {/* thanh navigator */}
                 <div className="header-tabs-container">
                     <Navigator menus={adminMenu} />
+                    <adminMenu roleID = {roleId}/>
                 </div>
                 <div className='wellcome'>
                     <span>Well come {userInfo && Name ? Name: "" }</span>
