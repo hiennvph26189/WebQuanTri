@@ -200,13 +200,19 @@ class ModalEditOrder extends Component {
     listOrderCart = ()=>{
         let idSp = []
         let products = []
+        if(this.state.idCart){
         this.state.idCart.map((item)=>{
-            this.props.arrCarts.map((item2)=>{
-                if(item === item2.id){
-                    idSp.push(item2)
-                }
-            }) 
+            if(this.props.arrCarts){
+                this.props.arrCarts.map((item2)=>{
+                    if(item === item2.id){
+                        idSp.push(item2)
+                    }
+                }) 
+            }
+           
         })
+    }
+        console.log(idSp,"asd;aks;dk")
         idSp.map((item)=>{
             this.props.arrProducts.map((product)=>{
                 if(item.ipSanPham == product.id){
@@ -466,9 +472,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = dispatch => {
     return {
-        // getCategoriesStart: ()=> dispatch(actions.fetchCategoriesStart()),
-        // createNewMembers: (data)=> dispatch(actions.createNewMembers(data)),
-        // fetchMembers: ()=> dispatch(actions.fetchMembers()),
+        
         HuyOrderCart: (data)=> dispatch(actions.HuyOrderCart(data)),
         checkOrderCart: (data)=> dispatch(actions.checkOrderCart(data)),
         giaoOrderCart: (data)=> dispatch(actions.giaoOrderCart(data)),
