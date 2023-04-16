@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import ModalMembers from './ModalMembers';
 import ModalEditMembers from './ModalEditMembers';
 import ModalDanhSachNap from './ModalDanhSachNap';
+import ModalDeleteMember from './ModalDeleteMember';
 import { getAllMembers } from '../../../services/membersService';
 import * as actions from '../../../store/actions'
 import CurrencyFormat from 'react-currency-format';
@@ -20,7 +21,9 @@ class Members extends Component {
             isOpenEditMembersModal: false,
             membersEdit:{},
             isOpenModalDanhSachNap: false,
+            isOpenModalDeleteMember: false,
             idMember: {},
+            id:''
         }
     }
     async componentDidMount() {
@@ -85,12 +88,22 @@ class Members extends Component {
        
        
     }
-   
+    handleDeleteMembers = (id)=>{
+        this.setState({
+            isOpenModalDeleteMember: !this.state.isOpenModalDeleteMember,
+            id: id,
+        })
+    }
+    toggleMembersDlete = ()=>{
+        this.setState({
+            isOpenModalDeleteMember:!this.state.isOpenModalDeleteMember
+        })
+    }
     render() {
         
        
         let arrMembers = [...this.state.arrMembers]
-        console.log(this.state.idMember,"ald;à;")
+        console.log(this.state.isOpenModalDeleteMember,"ald;à;")
         return (
             <div className="container members-container">
             <ModalMembers
@@ -108,14 +121,31 @@ class Members extends Component {
                 currentMembersNapTien = {this.state.idMember}
             />
         }
+
+            {
+                this.state.isOpenEditMembersModal&&
          
                 <ModalEditMembers
                 isOpen = {this.state.isOpenEditMembersModal}
                 toggleFromParent = {this.toggleEditMembersModal}
+                currentMembers = {this.state.membersEdit}
+
                 
                  
             />
+            }
+             {
+                this.state.isOpenModalDeleteMember&&
+         
+                <ModalDeleteMember
+                isOpen = {this.state.isOpenModalDeleteMember}
+                toggleFromParent = {this.toggleMembersDlete}
+                currentMembersId = {this.state.id}
+
                 
+                 
+            />
+            }
             
              
             <div className='title text-center'> Read Members</div>
@@ -175,12 +205,17 @@ class Members extends Component {
                                         Đang chờ xác nhận nạp tiền
                                     </td>
                                 }
-                                
+                                 {item.status === 3 &&
+                                    <td  className='text-danger'>
+                                        Đang Khóa nạp tiền
+                                    </td>
+                                }
 
 
                                 <td className='action'>
                                 <button onClick={()=>this.handleEditMembers(item)} class="btn btn-success mx-1 px-2 ">Edit</button>
-                                <button onClick={()=>this.handleDeleteMembers(item.id)} class="btn btn-danger  px-2">Delete</button>
+                                <button  onClick={()=>this.handleDeleteMembers(item.id)} class="btn btn-danger  px-2">Delete</button>
+                                
                                 </td>
                             </tr>
                         </>

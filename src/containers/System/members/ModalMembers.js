@@ -1,17 +1,13 @@
 import React, { Component } from 'react';
-import { FormattedMessage } from 'react-intl';
+
 import { connect } from 'react-redux';
-import {emitter} from '../../../utils/emitter';
-import {CommonUtils} from '../../../utils';
+
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
-import { getAllMembers } from '../../../services/membersService';
+
 import * as actions from '../../../store/actions';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
-import NapTienMembers from './NapTienMembers';
-import  './product.scss';
-import { CKEditor } from '@ckeditor/ckeditor5-react';
-import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
+
 import axios  from "../../../axios";
 
 
@@ -20,25 +16,13 @@ class ModalMembers extends Component {
     constructor(props) {
         super(props);
         this.state = {
-           
-        //     arrCategories2: [],
-        
-        //    privewImageUrl: '',
-        //    isOpenImage: false,
-
-        //    tenSp: '',
-        //    hangSx: '',
-        //    soLuong: 0,
-        //    giaSanPham: '',
-        //    idDanhSach: '',
-        //    hot: false,
-        //    sale: 0,
-        //    image: "",
-        //    image2: "",
-        //    sale: 0,
-        //    mota: "",
-        //     file: [],
-        //     file2: []
+            isOpenImage: false,
+            anhDaiDien:"",
+            tenThanhVien: "",
+            email: "",
+            gioiTinh:"",
+            soDienThoai:"",
+            matKhau:""
 
         }
        
@@ -76,7 +60,7 @@ class ModalMembers extends Component {
     }
     checkValidateInput = ()=>{
         let isValid = true;
-        let arrInput = ['tenSp','hangSx','giaSanPham','idDanhSach','mota','soLuong']
+        let arrInput = ['anhDaiDien','tenThanhVien','email','gioiTinh','soDienThoai','matKhau']
         for (let i = 0; i < arrInput.length;i++){
             if(!this.state[arrInput[i]]){
                 isValid  = false;
@@ -88,94 +72,65 @@ class ModalMembers extends Component {
         return isValid
     }
     handleAddNewMembers = () => {
-        // let isValid = this.checkValidateInput()
-        // if(isValid === true) {
-        //     this.props.createNewMembers({
-        //         tenSp: this.state.tenSp,
-        //         hangSx: this.state.hangSx,
-        //         giaSanPham: this.state.giaSanPham,
-        //         idDanhSach: this.state.idDanhSach,
-        //         hot: this.state.hot?1:0,
-        //         sale: this.state.sale,
-        //         soLuong: this.state.soLuong,
-        //         mota: this.state.mota,
-        //         image:  JSON.stringify(this.state.file)
+        let isValid = this.checkValidateInput()
+        if(isValid === true) {
+            this.props.createNewMember({
+                anhDaiDien: this.state.anhDaiDien,
+                tenThanhVien: this.state.tenThanhVien,
+                email: this.state.email,
+                gioiTinh: this.state.gioiTinh,
+                soDienThoai: this.state.soDienThoai,
+                matKhau: this.state.matKhau,
+                diaChi: this.state.diaChi,
+                
 
-
-        //     })
-        //     this.setState({
-        //         tenSp: '',
-        //         hangSx: '',
-        //         giaSanPham: '',
-        //         idDanhSach: '',
-        //         hot: false,
-        //         sale: 0,
-        //         privewImageUrl: '',
-        //         sale: 0,
-        //         soLuong: 0,
-        //         mota: "",
-        //         image: '',
-        //         file:[],
-        //         isCreateMembers: true,
-        //     })
+            })
+            this.setState({
+                anhDaiDien: "",
+                tenThanhVien:"",
+                email:"",
+                gioiTinh: "",
+                soDienThoai:"",
+                matKhau:"",
+            })
            
             
-        //     this.props.toggleFromParent()
-        // }
+            this.props.toggleFromParent()
+        }
        
     }
     componentDidUpdate(prevProps, prevState,snapshot) {
-        // if(prevProps.categoriesRedux !== this.props.categoriesRedux){
-        //     this.setState({
-        //         arrCategories2: this.props.categoriesRedux
-        //     })
-        // }
+      
     }
    
     handleImage2 =async (even)=>{
         const COUND_NAME = 'djh5ubzth'
         const PRESET_NAME = 'b6oxas4h'
-        const FOLDER_NAME = 'UploadFile'
-        const url = []
-        const data = even.target.files;
+        const FOLDER_NAME = 'UploadFileMember'
+        const url = ""
+        const data = even.target.files[0];
         const api = `https://api.cloudinary.com/v1_1/${COUND_NAME}/image/upload`
         const fromData = new FormData();
         
          const checkfile = 0   
         
        if(data){
-        for(let i = 0; i < data.length; i++){
-           if(data.length <=10 ){
                 fromData.append('upload_preset',PRESET_NAME)
                 fromData.append("folder",FOLDER_NAME)
-                fromData.append('file',data[i])
+                fromData.append('file',data)
             
                 await axios.post(api,fromData,{
                     headers:{
                         'Content-Type': 'multipart/form-data'
                     }
                 }).then((res) =>{
-                    url.push(res.secure_url)  
-                
+                        this.setState({
+                            anhDaiDien: res.secure_url
+                           })      
             })
-
-           }else{
-            alert("Không được quá 10 ảnh")
-            break;
-        
-        }
-        }
-        if(this.state.file){
-            this.setState({
-                file: [...this.state.file, ...url]
-            })
-        }else{
-            this.setState({
-                file: [ ...url]
-            })
-        }
-       
        }
+      
+       
         
     }
     
@@ -188,35 +143,25 @@ class ModalMembers extends Component {
         }
        
     }
-    CheckInput = ()=>{
-        this.setState({
-            hot: !this.state.hot
-        })
-    }
+    
+  
     DeleteImage=(image)=>{
         if(image){
-           let arr = [...this.state.file]
+          
            this.setState({
-                file: arr.filter(item => item !== image)
+                anhDaiDien: ""
            })
            
-            console.log(this.state.file,"adhfahd")
+           
         }
     }
     render() {  
         
-        
-       
-        // let isloading = this.props.isLoading
-        // let url = [...this.state.file]
-        // let lenghtImage = 0
-        // for(let i = 0; i<=url.length;i++){
-        //     lenghtImage = url.length
-        // }
-        // console.log(lenghtImage)
-
-        // console.log(arrCategories,"sdaljfla")
-        // console.log(this.props.isLoading)
+        let url = ""
+       if(this.state.anhDaiDien){
+        url = this.state.anhDaiDien
+       }
+       console.log(this.state.anhDaiDien,"á;ad;d")
         return (
             
         <Modal 
@@ -229,7 +174,7 @@ class ModalMembers extends Component {
             <ModalHeader toggle={()=>this.toggle()}>Create New Members</ModalHeader>
                 <ModalBody>
                     <div className='container'>
-                        <div></div>
+                        
                         <div className=''>
                             <div className='col-12 row mg-top'>
                                 <div className='col-6 form-group'>
@@ -241,7 +186,10 @@ class ModalMembers extends Component {
                                     <input type="text" className="form-control" placeholder='Nhập email' onChange={(event)=>this.handleOnChageInput(event,'email')} name="email" value={this.state.email}/>
                                 </div>
                             </div> 
-                            
+                            <div className='col-6 form-group '>
+                                    <label>Mật khẩu</label>
+                                    <input type="text" className="form-control" placeholder='Nhập Mật khẩu' onChange={(event)=>this.handleOnChageInput(event,'matKhau')} name="matKhau" value={this.state.matKhau}/>
+                                </div>
                             
                             <div className=' col-12 row'>
                                 <div className='col-3 form-group  mg-top'>
@@ -278,61 +226,41 @@ class ModalMembers extends Component {
                                     </div>
                                     
                                 </div>
-                             
-                                
-                               
+  
                             </div>
-                            <div className='flex  col-12 row ' >
-                               
-                                        {/* <div className='col-4 ' key={item} style={{position:"relative",marginTop:'10px'}} >
-                                            <img   style={{ maxWidth:'230px'}} onClick={()=>this.openImage()} src={item.anhDaiDien}/>
-                                            <span onClick={()=>this.DeleteImage(item)} className='p-2 cursor-pointer hover:bg-gray-400' style={{   
-                                                position: 'absolute',
-                                                cursor: "pointer",
-                                                right:'0%',
-                                                top: '-7%',
-                                                color: 'red',
-                                                borderRadius: '50%',
-                                                background: '#ccc',
-                                                width: '30px',
-                                                height: '30px',
-                                                display: 'flex',
-                                                justifyContent: 'center',
-                                                alignItems: 'center',
-                                                
-                                            }}
-                                                >
-                                                    <i className="fas fa-trash"></i></span>
-                                        </div> */}
-                                 
-                                </div>
-                            <div class="form-group form-check col-3 mg-top">
-                                   
-                                   <label class="form-check-label" for="exampleCheck1">Sản phẩm Hot</label>
-                                   {this.state.hot === true?
-                                        <input type="checkbox"  class="form-check-input" id="exampleCheck1"  onClick={()=>this.CheckInput()}  checked />
-                                        :
-                                        <input type="checkbox"  class="form-check-input" id="exampleCheck1"  onClick={()=>this.CheckInput()}/>
-                                    }
-                                   
-                               </div>
+                            {url&&
+                            <>
+                                 <div className='flex  col-12 flexNewEdit ' >
+                             
+                             <div className='col-md-4 col-sm-12 ' style={{position:"relative",marginTop:'10px'}} >
+                                 <img style={{ maxWidth:'230px'}} onClick={()=>this.openImage()} src={url}/>
+                                 <span onClick={()=>this.DeleteImage(url)} className='p-2 cursor-pointer hover:bg-gray-400' style={{   
+                                     position: 'absolute',
+                                     cursor: "pointer",
+                                     right:'0%',
+                                     top: '-7%',
+                                     color: 'red',
+                                     borderRadius: '50%',
+                                     background: '#ccc',
+                                     width: '30px',
+                                     height: '30px',
+                                     display: 'flex',
+                                     justifyContent: 'center',
+                                     alignItems: 'center',
+                                     
+                                 }}
+                                     >
+                                         <i className="fas fa-trash"></i></span>
+                      
+                     </div>
+                     </div>
+                            </>
+                           
+                            }
+                          
                            
                         </div>
-                        <div className='col-12 form-group mg-top'>
-                                <label >Mô tả</label>
-                                <CKEditor
-                                editor = {ClassicEditor}
-                                data={this.state.mota}
-                                        
-                                onChange={( event, editor ) => {
-                                    const data = editor.getData();
-                                    this.setState({
-                                        mota: data
-                                    })
-                                }}
-                />
-                              
-                            </div>
+                       
                     </div>
                     {this.state.isOpenImage === true && <Lightbox
                         mainSrc={this.state.privewImageUrl}
@@ -343,8 +271,8 @@ class ModalMembers extends Component {
                     
                 </ModalBody>
                 <ModalFooter>
-                <Button color="success" className='px-2' onClick={()=>this.handleEditMembers()}>
-                    Edit Members
+                <Button color="success" className='px-2' onClick={()=>this.handleAddNewMembers()}>
+                    Add new Members
                 </Button>{' '}
                 <Button color="danger" className='px-2' onClick={()=>this.toggle()}>
                     Cancel
@@ -359,17 +287,14 @@ class ModalMembers extends Component {
 
 const mapStateToProps = state => {
     return {
-        // categoriesRedux: state.admin.categories,
-        // isLoading: state.admin.isLoading
+        
     };
 };
 
 const mapDispatchToProps = dispatch => {
     return {
-        // getCategoriesStart: ()=> dispatch(actions.fetchCategoriesStart()),
-        // createNewMembers: (data)=> dispatch(actions.createNewMembers(data)),
-        // fetchMembers: ()=> dispatch(actions.fetchMembers()),
-        // createNewImage: (data)=> dispatch(actions.createNewImage(data)),
+       
+        createNewMember: (data)=> dispatch(actions.createNewMember(data))
     };
 };
 

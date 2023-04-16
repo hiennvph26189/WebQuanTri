@@ -1,6 +1,6 @@
 import actionTypes from './actionTypes';
 import { getAllProducts,createNewProductsService,uploadImage,deleteProductsService,editProductsService,getAllTotalProducts } from '../../services/productsService';
-import { getAllMembers,getLichSuNap,editMembersPrices,editHuyPricesMembers } from '../../services/membersService';
+import { getAllMembers,getLichSuNap,editMembersPrices,editHuyPricesMembers,createNewMembers,editMembersService,deleteMembersService } from '../../services/membersService';
 import { getAllOrders ,huyOrdersSucces,checkOrderService,GiaoDonService,deleteOrderService} from '../../services/OrdersService';
 import { toast } from 'react-toastify';
 // export const fetchCategoriesStart = () => ({
@@ -498,4 +498,104 @@ export const deleteOrderSuccess = () => ({
 })
 export const deleteOrderFailed = () => ({
     type: actionTypes.DELETE_ORDERS_FAILED,
+})
+
+export const createNewMember = (data) => {
+    return async(dispatch,getState)=>{
+        try {
+            
+             let res = await createNewMembers(data)
+
+             if(res && res.errCode === 0){
+                toast.success("Đã thêm mới Thành viên")
+                // dispatch(updateHuyOrderSuccess())
+                dispatch(createNewMemberSuccess())
+                dispatch(fetchMembers())
+            }else{
+                toast.error(res.errMessage)
+                dispatch(createNewMemberFailed())
+            }
+           
+        } catch (error) {
+            dispatch( createNewMemberFailed())
+            console.log("createNewImageFailed ",error)
+        }
+    }
+
+}
+export const createNewMemberSuccess = () => ({
+    
+    type: actionTypes.CREATE_NEW_MEMBER_SUCCESS,
+   
+})
+export const createNewMemberFailed = () => ({
+    
+    type: actionTypes.CREATE_NEW_MEMBER_FAIL,
+  
+})
+export const editMember = (data) => {
+    return async(dispatch,getState)=>{
+        try {
+            
+             let res = await editMembersService(data)
+
+             if(res && res.errCode === 0){
+                toast.success("Đã Sửa Thành viên")
+                // dispatch(updateHuyOrderSuccess())
+                dispatch(editMemberSuccess())
+                dispatch(fetchMembers())
+            }else{
+                toast.error(res.errMessage)
+                dispatch(editMemberFailed())
+            }
+           
+        } catch (error) {
+            dispatch( editMemberFailed())
+            console.log("createNewImageFailed ",error)
+        }
+    }
+
+}
+export const editMemberSuccess = () => ({
+    
+    type: actionTypes.EDIT_MEMBER_SUCCESS,
+   
+})
+export const editMemberFailed = () => ({
+    
+    type: actionTypes.EDIT_MEMBER_FAIL,
+  
+})
+export const DeleteMember = (data) => {
+    return async(dispatch,getState)=>{
+        try {
+            
+             let res = await deleteMembersService(data)
+
+             if(res && res.errCode === 0){
+                toast.success(res.errMessage)
+                // dispatch(updateHuyOrderSuccess())
+                dispatch(DeleteMemberSuccess())
+                dispatch(fetchMembers())
+            }else{
+                toast.error(res.errMessage)
+                dispatch(DeleteMemberSuccess())
+            }
+           
+        } catch (error) {
+            dispatch( DeleteMemberSuccess())
+            console.log("createNewImageFailed ",error)
+        }
+    }
+
+}
+export const DeleteMemberSuccess = () => ({
+    
+    type: actionTypes.DELETE_MEMBER_SUCCESS,
+   
+})
+export const DeleteMemberFailed = () => ({
+    
+    type: actionTypes.DELETE_MEMBER_FAIL,
+  
 })

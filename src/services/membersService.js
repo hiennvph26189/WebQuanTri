@@ -3,8 +3,9 @@ const getAllMembers = ()=>{
     return axios.get(`/api/get-all-members`)
 }
 const createNewMembers = (data)=>{
-    return axios.post(`/api/add-members`,data)
+    return axios.post(`/api/add-member`,data)
 }
+
 const getLichSuNap = (id)=>{
     console.log(id,"getId")
     return axios.get(`/api/lich-su-naptien-members-admin?id=${id}`)
@@ -12,8 +13,8 @@ const getLichSuNap = (id)=>{
 const deleteMembersService = (id)=>{
     return axios.delete(`/api/delete-members`,{data:{id:id}})
 }
-const editMembersService = (imputData)=>{
-    return axios.put(`/api/edit-members`,imputData)
+const editMembersService = (data)=>{
+    return axios.put(`/api/edit-members`,data)
 }
 const editMembersPrices = (data)=>{
     console.log(data,"imputData")
