@@ -23,13 +23,17 @@ class ProductManage extends Component {
             totalProducts: 0,
             // currentPage: 1,
             pageSize: 5,
+            arrSearch: [],
+            search:""
             
         }
        }
      
     async componentDidMount() {
         
+       
         this.props.fetchProducts(this.state.currentPage) 
+   
         // this.setState({ orders, totalCount, currentPage: this.state.page });
     }
      
@@ -60,16 +64,23 @@ class ProductManage extends Component {
             this.setState({
                 arrCategories: this.props.categoriesRedux
             })
-        }if(prevProps.totalProducts !== this.props.totalProducts){
+        } 
+        
+        if(prevProps.totalProducts !== this.props.totalProducts){
             
             let count = 0
-            this.props.totalProducts.map((item)=>{
-                count = count + 1
-            })
+            if(this.props.totalProducts){
+                this.props.totalProducts.map((item)=>{
+                    count = count + 1
+                })
+            }
+           
             this.setState({
-                totalProducts: count
+                totalProducts: count,
+                arrSearch: this.props.totalProducts
             })
         }
+        
     }
     price =(price)=>{
             var x = price;
@@ -116,6 +127,29 @@ class ProductManage extends Component {
         this.setState({
             currentPage: this.state.currentPage -1
         })
+    }
+    timKiemSanPham = (event)=>{
+            if(event.target.value){
+                const newData = this.state.arrSearch.filter((item)=>{
+                    const itemData = item.tenSp? item.tenSp.toUpperCase(): "".toUpperCase()
+                    const textData = event.target.value.toUpperCase()
+                    return itemData.indexOf(textData)> -1
+                })
+                if(newData){
+                   
+                    this.setState({
+                        search: event.target.value,
+                        arrProducts: newData
+
+                    })
+                }
+            }else{
+                this.setState({
+                    search: event.target.value,
+                    arrProducts: this.props.productsRedux
+
+                })
+            }
     }
      render() {
         
@@ -170,6 +204,8 @@ class ProductManage extends Component {
             );
            
           }
+
+         
         return (
             <div className="container products-container">
                 <ModalProducts
@@ -190,8 +226,19 @@ class ProductManage extends Component {
                 }
                  
                 <div className='title text-center'> Read Products</div>
-                <div className='mx-2'>
-                    <button className='btn btn-primary px-2' onClick={()=>this.handleAddNewProducts()}> <i className='fas fa-plus px-2'></i>Add new products</button>
+                <div className='col-12' style={{display:"flex"}} >
+                    <button className=' col-2 btn btn-primary px-2' onClick={()=>this.handleAddNewProducts()}> <i className='fas fa-plus px-2'></i>Add new products</button>
+                    <div class="row mt-10 col-8">
+                    <div class="col-md-5 mx-auto">
+                        
+                        <div class="input-group">
+                            <input class="form-control  border" onChange={(event)=>this.timKiemSanPham(event)} type="search" value={this.state.search} placeholder='Tìm kiếm theo tên Sản phẩm' id="example-search-input"/>
+                            <span class="input-group-append">
+                                
+                            </span>
+                        </div>
+                    </div>
+                </div>
                 </div>
                 <div className='products-table mt-4 mx-2'>
                 <table id="customers" class="ws-table-all px-5">
@@ -255,7 +302,8 @@ class ProductManage extends Component {
                   
                         
                         
-                    </tbody></table>
+                    </tbody>
+                    </table>
                     <div className='pagination ' style={{marginTop:"10px"}}>
                    
                     
@@ -299,6 +347,7 @@ const mapStateToProps = state => {
         productsRedux: state.admin.products,
         totalProducts: state.admin.totalProducts,
         categoriesRedux: state.admin.categories,
+        allProducts: state.admin.allProducts,
         // categorietotalProductssRedux: state.admin.totalProducts,
         
     };
@@ -308,9 +357,8 @@ const mapDispatchToProps = dispatch => {
     return {
         getCategoriesStart: ()=> dispatch(actions.fetchCategoriesStart()),
         fetchProducts: (page)=> dispatch(actions.fetchProducts(page)),
-        DeleteProducts: (id,page)=> dispatch(actions.DeleteProducts(id,page)),
-        // getCategoriesStart: ()=> dispatch(actions.fetchCategoriesStart())
-        // processLogout: () => dispatch(actions.processLogout()),
+        DeleteProducts: (id,page)=> dispatch(actions.DeleteProducts(id,page)),   
+        fetchAllProducts: ()=> dispatch(actions.fetchAllProducts()),
     };
 };
 
