@@ -30,7 +30,8 @@ class ModalDanhSachNap extends Component {
             isOpenAnhNapTien:false,
             isOpenNapTien: false,
             idPrice: null,
-            imagePrice: ''
+            imagePrice: '',
+            tienNap: ""
         }
        
 
@@ -83,10 +84,11 @@ class ModalDanhSachNap extends Component {
         const newFr = Moment(time).locale("vi", fr).format("HH:mm:ss");
         return newFr
     }
-    handleNapTien = (id)=>{
+    handleNapTien = (id,tienNap)=>{
         this.setState({
             isOpenNapTien: !this.state.isOpenNapTien,
-            idPrice: id
+            idPrice: id,
+            tienNap:tienNap
 
         })
         // if(this.state.napTien&&this.props.currentMembersNapTien){
@@ -151,6 +153,7 @@ class ModalDanhSachNap extends Component {
                 toggleFromParentNapTien = {this.toggleMembersNapTienModal}
                 currentMembersNapTien = {this.state.idMember}
                 currentNapTien = {this.state.idPrice}
+                tienNap = {this.state.tienNap}
             
             />
                 }
@@ -218,7 +221,7 @@ class ModalDanhSachNap extends Component {
                                 }
                                 {item.status === 0&& 
                                     <>
-                                     <button onClick={()=>this.handleNapTien(item.id)}  class="btn btn-success mx-1 px-2 ">Nạp</button>
+                                     <button onClick={()=>this.handleNapTien(item.id,item.tienNap)}  class="btn btn-success mx-1 px-2 ">Nạp</button>
                                      <button onClick={()=>this.handleDeleteMembers(item.id)} class="btn btn-danger  px-2">Hủy nạp</button>
                                     </>
                                

@@ -37,7 +37,8 @@ class NapTienMembers extends Component {
         
         this.setState({
             anhChuyenTien: this.props.currentMembersNapTien,
-            idPrice: this.props.currentNapTien
+            idPrice: this.props.currentNapTien,
+            napTien: this.props.tienNap
         })
         
         
@@ -68,7 +69,14 @@ class NapTienMembers extends Component {
             
         }
     }
-    
+    price =(price)=>{
+       
+            let x = price;
+            x = x.toLocaleString('it-IT', {style : 'currency', currency : 'VND'});
+            return  x;
+        
+       
+    } 
     render() { 
         
         
@@ -89,12 +97,18 @@ class NapTienMembers extends Component {
                 <div className='container'></div>
                 <div className=''>
                             <div className='col-12 row mg-top'>
+                               
                                 <div className='col-12 form-group alignItems-center justifyContent-center'style={{
                                     display: 'flex',
                                     justifyContent: 'center',
                                     alignItems: 'center',
                                 }}>
                                     <div className='col-9'>
+                                    <div >
+                                        <p style={{fontSize:"17px", fontWeight:"700"}}>
+                                            Số tiền nạp: <span style={{color:"red"}}>{this.price(parseInt(this.state.napTien))}</span>
+                                        </p>
+                                    </div>
                                     <label>Nhập số tiền cần nạp</label>
                                     <input type='number' onChange={(event)=>this.handleOnChageInput(event,'napTien')} className='form-control' value={this.state.napTien}/>
                                     </div>
