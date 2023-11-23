@@ -91,13 +91,7 @@ class ModalDanhSachNap extends Component {
             tienNap:tienNap
 
         })
-        // if(this.state.napTien&&this.props.currentMembersNapTien){
-        //     this.props.updateMembersPrice({
-        //         id:id,
-        //         tienNap: this.state.napTien,
-        //         idUser: this.props.currentMembersNapTien
-        //     })
-        // }
+       
     }
     addidMembers = (id)=>{
         return id

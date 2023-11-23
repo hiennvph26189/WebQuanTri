@@ -320,7 +320,7 @@ export const updateHuyMembersPrice = (data) => {
             let res = await editHuyPricesMembers(data)
               
             if(res && res.errCode === 0){
-                toast.success("Nạp tiền thành công")
+                toast.success("Đã hủy nạp tiền")
                 dispatch(updateHuyMembersPriceSuccess())
                 dispatch(fetchMembersPrice(data.idUser))
                 dispatch(fetchMembers())

@@ -21,10 +21,10 @@ class ModalProducts extends Component {
         this.state = {
            
             arrCategories2: [],
-        
            privewImageUrl: '',
            isOpenImage: false,
-
+           checkedItemsSizes:[],
+           checkedItemsSizesNumber: [],
            tenSp: '',
            hangSx: '',
            soLuong: 0,
@@ -37,6 +37,7 @@ class ModalProducts extends Component {
            image2: "",
            sale: 0,
            mota: "",
+           sizeQuantities: {},
             file: [],
             file2: []
 
@@ -100,8 +101,9 @@ class ModalProducts extends Component {
                 soLuong: this.state.soLuong,
                 giaNhap: this.state.giaNhap,
                 mota: this.state.mota,
-                image:  JSON.stringify(this.state.file)
-
+                sizes: this.state.idDanhSach==56?JSON.stringify(this.state.checkedItemsSizesNumber):(this.state.checkedItemsSizes),
+                image:  JSON.stringify(this.state.file),
+                listSizes: JSON.stringify(this.state.sizeQuantities)
 
             })
             this.setState({
@@ -112,12 +114,15 @@ class ModalProducts extends Component {
                 hot: false,
                 sale: 0,
                 privewImageUrl: '',
+                checkedItemsSizesNumber:{},
+                checkedItemsSizes:{},
                 sale: 0,
                 soLuong: 0,
                 giaNhap: 0,
                 mota: "",
                 image: '',
                 file:[],
+                sizeQuantities: {},
                 isCreateProducts: true,
             })
            
@@ -202,20 +207,53 @@ class ModalProducts extends Component {
                 file: arr.filter(item => item !== image)
            })
            
-            console.log(this.state.file,"adhfahd")
+           
         }
     }
+    
+    handleChangeSizes = (event) => {
+        const { name } = event.target;
+        this.setState((prevState) => ({
+          checkedItemsSizes: {
+            ...this.state.checkedItemsSizes,
+            [name]: !this.state.checkedItemsSizes[name], // Đảo trạng thái checkbox khi thay đổi
+          },
+        }));
+        
+      };
+    handleChangeSizesNumber = (event) => {
+        const { name } = event.target;
+        this.setState((prevState) => ({
+          checkedItemsSizesNumber: {
+            ...prevState.checkedItemsSizesNumber,
+            [name]: !prevState.checkedItemsSizesNumber[name], // Đảo trạng thái checkbox khi thay đổi
+          },
+        }));
+        
+      };
+      handleQuantityChange = (size, quantity) => {
+        this.setState((prevState) => ({
+          sizeQuantities: {
+            ...prevState.sizeQuantities,
+            [size]: quantity,
+          },
+        }));
+      };
     render() {  
-        
-        
+        const { sizeQuantities } = this.state;
+       
         let arrCategories = this.state.arrCategories2
         let isloading = this.props.isLoading
         let url = [...this.state.file]
+       
         let lenghtImage = 0
         for(let i = 0; i<=url.length;i++){
             lenghtImage = url.length
         }
-        console.log(arrCategories,';adk;fkds')
+        
+        
+        let arrSize = ["S","M","L","XL","XXL"]
+        let arrSizeNumber = ['39','40','41','42','43','44','45','46','47','48','49']
 
         // console.log(arrCategories,"sdaljfla")
         // console.log(this.props.isLoading)
@@ -276,6 +314,49 @@ class ModalProducts extends Component {
                                 <label>soLuong</label>
                                 <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'soLuong')} name="name" value={this.state.soLuong}/>
                             </div>
+                            </div>
+                            <div className='col-sm-12 col-md-12 form-group mg-top'>
+                            <label>Size:</label>
+                                {arrSize&&this.state.idDanhSach&&this.state.idDanhSach != 56?
+                                   
+                                    arrSize.map((size)=>{
+                                        return <>
+                                        <label htmlFor={`quantity-${size}`}>{size}:</label>
+                                            
+                                          <input
+                                                style={{ width:"70px", marginRight:"35px"}}
+                                               type="number"
+                                               id={`quantity-${size}`}
+                                               value={sizeQuantities[size]}
+                                               onChange={(e) =>
+                                                 this.handleQuantityChange(size, parseInt(e.target.value, 10))
+                                               }
+                                                />
+                                          
+                                           
+                                        </>
+                                    })
+                                 : 
+                                 arrSizeNumber&&this.state.idDanhSach&&this.state.idDanhSach == 56&&
+                                   
+                                   arrSizeNumber.map((size)=>{
+                                       return <>
+                                        <label className='pl-2' key={size}>
+                                           
+                                         <input
+                                               style={{marginLeft:"35px"}}
+                                               className='ml-4'
+                                               type="checkbox"
+                                               name={size}
+                                               checked={this.state.checkedItemsSizesNumber[size] || false}
+                                               onChange={this.handleChangeSizesNumber}
+                                               />
+                                          
+                                          &ensp;{size}
+                                           </label>
+                                       </>
+                                   })}
+                                
                             </div>
                             <div className=' col-sm-4 col-md-3 row'>
                                 <div className=' form-group mg-top'>

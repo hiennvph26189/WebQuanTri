@@ -214,7 +214,7 @@ class OrdersManage extends Component {
                                     
                                     <td className='action' style={{display:"flex", justifyContent:"center",alignItems:"center"}}>
                                     <button onClick={()=>this.handleEditOrder(item)} class="btn btn-success mx-1 px-2 ">Edit</button>
-                                    <button onClick={()=>this.handleDeleteOrderCart(item.id)} class="btn btn-danger  px-2">Delete</button>
+                                    
                                     </td>
                                 </tr>
                             </>

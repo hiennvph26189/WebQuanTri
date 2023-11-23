@@ -13,6 +13,8 @@ import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import _ from 'lodash';
 import axios  from "../../../axios";
+import axios2 from 'axios';
+import { GET_SIZE } from '../../../API';
 class ModalEditProducts extends Component {
 
     constructor(props) {
@@ -32,7 +34,8 @@ class ModalEditProducts extends Component {
            sale: 0,
            mota: "",
             image: [],
-            file:[]
+            file:[],
+            sizeQuantities: {},
 
         }
         
@@ -48,12 +51,27 @@ class ModalEditProducts extends Component {
         
         
     }
-    async componentDidMount () {
+    getSize=()=>{
+        const arraySize = ["S", "M", "L", "XL", "XXL"];
+        const numberSize = [30, 20, 40, 50, 60];
+    
+        const sizeQuantities = {};
+        arraySize.forEach((size, index) => {
+          sizeQuantities[size] = numberSize[index];
+        });
+    
+        this.setState({
+          sizeQuantities,
+        });
       
+    }
+    async componentDidMount () {
+        this.getSize()
        this.props.getCategoriesStart()
        const arr = []
        let products = this.props.currentProducts
-       console.log(products,"prodadsfad")
+       
+
         if(products && !_.isEmpty(products)){
            
             if(products.image){
@@ -240,7 +258,18 @@ class ModalEditProducts extends Component {
             console.log(this.state.file,"adhfahd")
         }
     }
+    handleQuantityChange = (size, quantity) => {
+        this.setState((prevState) => ({
+          sizeQuantities: {
+            ...prevState.sizeQuantities,
+            [size]: quantity,
+          },
+        }));
+      };
     render() {  
+
+        const { sizeQuantities } = this.state;
+        console.log(sizeQuantities)
         let arrCategories = this.state.arrCategories2
         let isloading = this.props.isLoading
         let url = this.state.file
@@ -248,7 +277,8 @@ class ModalEditProducts extends Component {
         // for(let i = 0; i<=url.length;i++){
         //     lenghtImage = url.length
         // }
-        console.log(this.state.file,'arrray')
+        let arrSize = ["S","M","L","XL","XXL"]
+        let arrSizeNumber = ['39','40','41','42','43','44','45','46','47','48','49']
         // console.log(arrCategories,"sdaljfla")
         // console.log(this.props.isLoading)
         return (
@@ -308,8 +338,51 @@ class ModalEditProducts extends Component {
                                 <label>soLuong</label>
                                 <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'soLuong')} name="name" value={this.state.soLuong}/>
                             </div>
-                            </div>
                             
+                            </div>
+                            <div className='col-sm-12 col-md-12 form-group mg-top'>
+                            <label>Size:</label>
+                                {arrSize&&this.state.idDanhSach&&this.state.idDanhSach != 56?
+                                   
+                                    arrSize.map((size)=>{
+                                        return <>
+                                        <label htmlFor={`quantity-${size}`}>{size}:</label>
+                                            
+                                          <input
+                                                style={{ width:"70px", marginRight:"35px"}}
+                                               type="number"
+                                               id={`quantity-${size}`}
+                                               value={sizeQuantities[size]}
+                                               onChange={(e) =>
+                                                 this.handleQuantityChange(size, parseInt(e.target.value, 10))
+                                               }
+                                                />
+                                          
+                                           
+                                        </>
+                                    })
+                                 : 
+                                 arrSizeNumber&&this.state.idDanhSach&&this.state.idDanhSach == 56&&
+                                   
+                                   arrSizeNumber.map((size)=>{
+                                       return <>
+                                        <label className='pl-2' key={size}>
+                                           
+                                         <input
+                                               style={{marginLeft:"35px"}}
+                                               className='ml-4'
+                                               type="checkbox"
+                                               name={size}
+                                               checked={this.state.checkedItemsSizesNumber[size] || false}
+                                               onChange={this.handleChangeSizesNumber}
+                                               />
+                                          
+                                          &ensp;{size}
+                                           </label>
+                                       </>
+                                   })}
+                                
+                            </div>
                                 <div className='col-3 form-group mg-top'>
                                     <label>Ảnh</label>
                                     <div className='upload-image'>
