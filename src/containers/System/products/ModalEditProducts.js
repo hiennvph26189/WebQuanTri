@@ -54,7 +54,7 @@ class ModalEditProducts extends Component {
     getSize= async()=>{
         let id_sp = this.props.currentProducts.id
         await axios.get(`${GET_SIZE}`+"?id_sp="+id_sp).then((res) => {
-           
+           console.log(res.data)
             
             if (res.errCode == 1) {
                  this.setState({
@@ -92,6 +92,7 @@ class ModalEditProducts extends Component {
                 giaNhap: products.giaNhap,
                 mota: products.mota,
                 id: products.id,
+
                
                 
             })
@@ -262,12 +263,24 @@ class ModalEditProducts extends Component {
         }
     }
     handleQuantityChange = (size, quantity) => {
-        this.setState((prevState) => ({
-          sizeQuantities: {
-            ...prevState.sizeQuantities,
-            [size]: quantity,
-          },
-        }));
+        // Cập nhật state theo kích thước
+        this.setState((prevState) => {
+            const newSizeQuantities = {
+              ...prevState.sizeQuantities,
+              [size]: quantity,
+            };
+      
+            // Tính toán tổng số
+            const newTotalSize = Object.values(newSizeQuantities).reduce(
+              (total, qty) => total + qty,
+              0
+            );
+      
+            return {
+              sizeQuantities: newSizeQuantities,
+              soLuong: newTotalSize,
+            };
+          });
       };
     render() {  
 
@@ -328,44 +341,51 @@ class ModalEditProducts extends Component {
                                     </select>
                                     
                                 </div>
-                                <div className='  col-sm-12 col-md-3 form-group mg-top'>
+                                <div className='  col-sm-12 col-md-3 form-group mg-top' style={{marginLeft:"10px"}}>
                                 <label>Giá sản phẩm</label>
                                 <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'giaSanPham')} name="giaSanPham" value={this.state.giaSanPham}/>
                                 
                             </div>
-                            <div className=' col-sm-12 col-md-3 form-group mg-top'>
+                            <div className=' col-sm-12 col-md-3 form-group mg-top' style={{marginLeft:"10px"}}>
                                 <label>Giảm giá (%)</label>
                                 <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'sale')} name="name" value={this.state.sale}/>
                             </div>
-                            <div className=' col-sm-12 col-md-3 form-group mg-top'>
-                                <label>soLuong</label>
-                                <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'soLuong')} name="name" value={this.state.soLuong}/>
+                            <div className=' col-sm-12 col-md-2 form-group mg-top' style={{marginLeft:"10px"}}>
+                                <label>Số lượng</label>
+                                <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'soLuong')} name="name" value={this.state.soLuong} disabled/>
                             </div>
                             
                             </div>
                             <div className='col-sm-12 col-md-12 form-group mg-top'>
                             <label>Size:</label>
+                                <div className='row'>
                                 {arrSize&&this.state.idDanhSach&&
                                    
-                                    arrSize.map((size)=>{
-                                        return <>
-                                        <label htmlFor={`quantity-${size}`}>{size}:</label>
-                                            
-                                          <input
-                                                style={{ width:"70px", marginRight:"35px"}}
-                                               type="number"
-                                               id={`quantity-${size}`}
-                                               value={sizeQuantities[size]}
-                                               onChange={(e) =>
-                                                 this.handleQuantityChange(size, parseInt(e.target.value, 10))
-                                               }
-                                                />
-                                          
+                                   arrSize.map((size)=>{
+                                       return <>
+                                       <div className='col-sm-12 col-md-2 form-group mg-top'>
+                                           <label htmlFor={`quantity-${size}`}>{size}:</label>
                                            
-                                        </>
-                                    })
-                                
-                                  }
+                                           <input
+                                                 className='form-control'
+                                                 style={{ width:"70px", marginRight:"35px"}}
+                                                type="number"
+                                                min={0}
+                                                id={`quantity-${size}`}
+                                                value={sizeQuantities[size]||0}
+                                                onChange={(e) =>
+                                                  this.handleQuantityChange(size, parseInt(e.target.value, 10))
+                                                }
+                                                 />
+                                       </div>
+                                       
+                                         
+                                          
+                                       </>
+                                   })
+                             }
+                                </div>
+                               
                                 
                             </div>
                                 <div className='col-3 form-group mg-top'>
