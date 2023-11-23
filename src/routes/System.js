@@ -8,6 +8,7 @@ import Members from '../containers/System/members/Members';
 import OrdersManage from '../containers/System/orders/OrdersManage';
 import ThongKeManage from '../containers/System/thongKe/ThongKeManage';
 import NewsManage from '../containers/System/news/NewsManage';
+import ContactManage from '../containers/System/contact/ContactManage';
 
 import Header from '../containers/Header/Header';
 class System extends Component {
@@ -24,6 +25,7 @@ class System extends Component {
                         <Route path="/system/thong-ke" component={ThongKeManage} />
                         <Route path="/system/user-member" component={Members} />
                         <Route path="/system/product-manage" component={ProductManage} />
+                        <Route path="/system/contact-manage" component={ContactManage} />
                         
                         <Route path="/system/order-manage" component={OrdersManage} />
                         <Route path="/system/categories" component={Categories} />

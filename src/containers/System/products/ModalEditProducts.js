@@ -51,18 +51,18 @@ class ModalEditProducts extends Component {
         
         
     }
-    getSize=()=>{
-        const arraySize = ["S", "M", "L", "XL", "XXL"];
-        const numberSize = [30, 20, 40, 50, 60];
-    
-        const sizeQuantities = {};
-        arraySize.forEach((size, index) => {
-          sizeQuantities[size] = numberSize[index];
-        });
-    
-        this.setState({
-          sizeQuantities,
-        });
+    getSize= async()=>{
+        let id_sp = this.props.currentProducts.id
+        await axios.get(`${GET_SIZE}`+"?id_sp="+id_sp).then((res) => {
+           
+            
+            if (res.errCode == 1) {
+                 this.setState({
+                    sizeQuantities: res.data
+                });
+            }
+        }).catch((error) => { console.log(error) });
+       
       
     }
     async componentDidMount () {
@@ -139,7 +139,9 @@ class ModalEditProducts extends Component {
                 soLuong: this.state.soLuong,
                 id: this.state.id,
                 image: JSON.stringify(this.state.file),
-                page:this.props.page
+                page:this.props.page,
+                listSizes: JSON.stringify(this.state.sizeQuantities)
+
 
             })
             this.setState({
@@ -157,6 +159,7 @@ class ModalEditProducts extends Component {
                 id: '',
                 file:[],
                 isCreateProducts: true,
+                sizeQuantities:{}
             })
            
             
@@ -255,7 +258,7 @@ class ModalEditProducts extends Component {
                 file: arr.filter(item => item !== image)
            })
            
-            console.log(this.state.file,"adhfahd")
+          
         }
     }
     handleQuantityChange = (size, quantity) => {
@@ -269,7 +272,7 @@ class ModalEditProducts extends Component {
     render() {  
 
         const { sizeQuantities } = this.state;
-        console.log(sizeQuantities)
+        console.log(sizeQuantities);
         let arrCategories = this.state.arrCategories2
         let isloading = this.props.isLoading
         let url = this.state.file
@@ -342,7 +345,7 @@ class ModalEditProducts extends Component {
                             </div>
                             <div className='col-sm-12 col-md-12 form-group mg-top'>
                             <label>Size:</label>
-                                {arrSize&&this.state.idDanhSach&&this.state.idDanhSach != 56?
+                                {arrSize&&this.state.idDanhSach&&
                                    
                                     arrSize.map((size)=>{
                                         return <>
@@ -361,26 +364,8 @@ class ModalEditProducts extends Component {
                                            
                                         </>
                                     })
-                                 : 
-                                 arrSizeNumber&&this.state.idDanhSach&&this.state.idDanhSach == 56&&
-                                   
-                                   arrSizeNumber.map((size)=>{
-                                       return <>
-                                        <label className='pl-2' key={size}>
-                                           
-                                         <input
-                                               style={{marginLeft:"35px"}}
-                                               className='ml-4'
-                                               type="checkbox"
-                                               name={size}
-                                               checked={this.state.checkedItemsSizesNumber[size] || false}
-                                               onChange={this.handleChangeSizesNumber}
-                                               />
-                                          
-                                          &ensp;{size}
-                                           </label>
-                                       </>
-                                   })}
+                                
+                                  }
                                 
                             </div>
                                 <div className='col-3 form-group mg-top'>

@@ -5,6 +5,7 @@ export const adminMenu =[
           
                
                 { name: 'menu.system.system-administrator.user-manage', link: '/system/user-manage' },
+                { name: 'menu.system.system-administrator.contact', link: '/system/contact-manage' },
                 { name: 'menu.system.system-administrator.thong-ke', link: '/system/thong-ke' },
                 { name: 'menu.system.system-administrator.user-member', link: '/system/user-member' },
                 { name: 'menu.system.system-administrator.product-manage', link: '/system/product-manage' },

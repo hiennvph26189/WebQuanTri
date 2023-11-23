@@ -153,7 +153,7 @@ class ProductManage extends Component {
     }
      render() {
         
-        console.log(this.state.totalProducts,"akdskd")
+       
         const { orders, totalProducts, currentPage, pageSize } = this.state;
         const pageCount = Math.ceil(totalProducts / pageSize);
         this.showImage()
