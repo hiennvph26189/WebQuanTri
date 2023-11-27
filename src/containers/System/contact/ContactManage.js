@@ -14,10 +14,18 @@ class ContactManage extends Component {
         this.state = {
             arrContact: [],
             isOpenModal: false,
+            isOpenModal2: false,
             email:'',
             phanhoi:'',
             id:0,
-            tieude:''
+            tieude:'',
+            TongTrang: 0,
+            page: 1,
+            comment: '',
+            name:'',
+            phanhoi_admin:'',
+            createdAt:'',
+            updatedAt:'',
             
         }
 
@@ -28,11 +36,12 @@ class ContactManage extends Component {
     }
 
     CallapiContact = async() => {
-        await axios.get(GET_ALL_CONTACT).then((res) => {
-            console.log(res.data)
+        await axios.get(`${GET_ALL_CONTACT}?page=${this.state.page}`).then((res) => {
+            console.log(res)
              if (res.errCode == 0) {
                   this.setState({
-                    arrContact: res.data
+                    TongTrang : res.totalCount,
+                    arrContact: res.lienhe
 
                  });
 
@@ -56,6 +65,11 @@ class ContactManage extends Component {
     toggle = () => {
         this.setState({
             isOpenModal: !this.state.isOpenModal
+        })
+    }
+    toggle2 = () => {
+        this.setState({
+            isOpenModal2: !this.state.isOpenModal2
         })
     }
     handleOnChageInput = (event, id) => {
@@ -85,20 +99,80 @@ class ContactManage extends Component {
                  });
                  this.toggle();
                  toast.success("Gửi Thành công")
+                 this.CallapiContact();
              }else{
                 toast.error("Gửi Thất Bại")
              }
          }).catch((error) => { console.log(error) });
     }
+    pagePev = () => {
+        this.CallapiContact()
+        this.setState({
+            page: this.state.page -1
+        })
+    }
+    pageNext = () => {
+        this.CallapiContact()
+        this.setState({
+            page: this.state.page +1
+        })
+    }
+    showChiTiet = (item) => {
+        this.setState({
+            isOpenModal2: true,
+            email: item.email,
+            id: item.id,
+            comment: item.comment,
+            name: item.name,
+            phanhoi_admin: item.phanhoi_admin,
+            createdAt: item.createdAt,
+            updatedAt:item.updatedAt,
+
+         });
+    }
+
         render() {
+            let arrPagetion = [];
+            for ( let i = 1; i <= this.state.TongTrang; i++){
+                console.log(i)
+                arrPagetion.push(
+                    <>
+                    {
+                    i === this.state.page?
+                    <li class="page-item disabled">
+                    <button class="page-link"
+                    key={i}
+                    onClick={() => {this.CallapiContact()
+                        this.setState({
+                            page: i
+                        })
+                    }  }
+                
+                >
+                {i}
+              </button></li>
+                    :
+                    <li class="page-item ">
+                    <button class="page-link"
+                    key={i}
+                    onClick={() => {this.CallapiContact()
+                        this.setState({
+                            page: i
+                        })
+                    }  }
+                
+                >
+                {i}
+              </button></li>
+                }
+                    </>
+                )
+            }
         let arrContact = this.state.arrContact;
         console.log("logg>>>>>>>>>>>.", this.state.phanhoi, this.state.tieude);
         return (
             <div className="container category-container">   
             <div className='title text-center'> Read Category</div>
-            <div className='mx-2'>
-                <button className='btn btn-primary px-2' onClick={()=>this.handleAddNewCategory()}> <i className='fas fa-plus px-2'></i>Add new category</button>
-            </div>
             <div className='category-table mt-4 mx-2'>
             <table id="customers" class="ws-table-all">
                 <tbody>
@@ -120,7 +194,7 @@ class ContactManage extends Component {
                             <tr>
                                 <td>{item.id}</td>
                                 <td>{item.name}</td>
-                                <td>{item.email}</td>
+                                <td onClick={() => this.showChiTiet(item)}>{item.email}</td>
                                 <td>{item.comment}</td>
                                 <td>{item.phanhoi_admin}</td>
                                 <td>{this.formatDate(item.createdAt)}</td>
@@ -133,7 +207,34 @@ class ContactManage extends Component {
                     )
                      
                 })}     
-                </tbody></table>
+                </tbody>
+                </table>
+                <nav aria-label="Page navigation example" style={{marginTop:'10px'}}>
+                        <ul class="pagination">
+                            {this.state.page === 1?
+                                 <li class="page-item disabled">
+                                 <button class="page-link" tabindex="-1">Previous</button>
+                                 </li>
+                            :
+                            <li class="page-item ">
+                                 <button class="page-link"  onClick={() =>this.pagePev()} >Previous</button>
+                                 </li>
+                            }
+                            {arrPagetion}
+                          {
+                            this.state.TongTrang == this.state.page ?
+                            <li class="page-item disabled">
+                                 <button class="page-link" tabindex="-1">Next</button>
+                                 </li>
+                                 :
+                            <li class="page-item ">
+                             <button class="page-link" onClick={() => this.pageNext()}>Next</button>
+                             </li>
+                          } 
+                          
+                           
+                        </ul>
+                    </nav>
             </div>
             <Modal 
          isOpen={this.state.isOpenModal}
@@ -164,6 +265,50 @@ class ContactManage extends Component {
                     Trả Lời Phản Hồi
                 </Button>{' '}
                 <Button color="danger" className='px-2' onClick={()=>this.toggle()}>
+                    Cancel
+                </Button>
+            </ModalFooter>
+        </Modal>
+
+       
+
+
+        <Modal 
+         isOpen={this.state.isOpenModal2}
+         toggle={()=>this.toggle2()}
+         className={"modalConttailer"}
+         size= 'lg'
+         centered 
+         >
+            <ModalHeader toggle={()=>this.toggle2()}>Chi Tiết Comment</ModalHeader>
+                <ModalBody>
+                    <div className='container'>
+                        <div className=''>
+                        <div className='col-12 form-group mg-top'>
+                            <h5><span style={{fontWeight:'600'}}>Tên Khách Hàng</span> : {this.state.name}</h5>
+                               </div>
+                        <div className='col-12 form-group mg-top'>
+                            <h5><span style={{fontWeight:'600'}}>Email</span> : {this.state.email}</h5>
+                               </div>
+                               <div className='col-12 form-group mg-top'>
+                            <h5><span style={{color:'red',fontWeight:'600'}}>Comment</span> : {this.state.comment}</h5>
+                               </div>
+                               <div className='col-12 form-group mg-top'>
+                            <h5><span style={{color:'red',fontWeight:'600'}}>Phản Hồi</span> : {this.state.phanhoi_admin}</h5>
+                               </div>
+                               <div className='col-12 form-group mg-top'>
+                            <h5><span style={{fontWeight:'600'}}>Ngày Gửi</span> : {this.formatDate(this.state.createdAt)}</h5>
+                               </div>
+                               <div className='col-12 form-group mg-top'>
+                            <h5><span style={{fontWeight:'600'}}>Ngày Trả Lời</span> : {this.formatDate(this.state.updatedAt)}</h5>
+                               </div>
+                           
+                        </div>
+                    </div>
+                </ModalBody>
+                <ModalFooter>
+                
+                <Button color="danger" className='px-2' onClick={()=>this.toggle2()}>
                     Cancel
                 </Button>
             </ModalFooter>
