@@ -230,9 +230,7 @@ class ContactManage extends Component {
                             <li class="page-item ">
                              <button class="page-link" onClick={() => this.pageNext()}>Next</button>
                              </li>
-                          } 
-                          
-                           
+                          }    
                         </ul>
                     </nav>
             </div>
