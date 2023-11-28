@@ -35,7 +35,7 @@ class ContactManage extends Component {
                     arrContact: res.data
 
                  });
-
+                 console.log(res);
              }
          }).catch((error) => { console.log(error) });
     }
