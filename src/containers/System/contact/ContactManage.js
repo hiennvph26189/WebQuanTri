@@ -194,7 +194,7 @@ class ContactManage extends Component {
                             <tr>
                                 <td>{item.id}</td>
                                 <td>{item.name}</td>
-                                <td onClick={() => this.showChiTiet(item)}>{item.email}</td>
+                                <td onClick={() => this.showChiTiet(item)} style={{cursor:"pointer"}}>{item.email}</td>
                                 <td>{item.comment}</td>
                                 <td>{item.phanhoi_admin}</td>
                                 <td>{this.formatDate(item.createdAt)}</td>
