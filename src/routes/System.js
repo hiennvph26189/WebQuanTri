@@ -11,6 +11,7 @@ import NewsManage from '../containers/System/news/NewsManage';
 import ContactManage from '../containers/System/contact/ContactManage';
 
 import Header from '../containers/Header/Header';
+import ThanhToan9Pay from '../containers/System/thanhtoan/ThanhToan9Pay';
 class System extends Component {
     render() {
         // {this.props.isLoggedIn && <Header />}
@@ -26,6 +27,7 @@ class System extends Component {
                         <Route path="/system/user-member" component={Members} />
                         <Route path="/system/product-manage" component={ProductManage} />
                         <Route path="/system/contact-manage" component={ContactManage} />
+                        <Route path="/system/thanhtoan-manage" component={ThanhToan9Pay} />
                         
                         <Route path="/system/order-manage" component={OrdersManage} />
                         <Route path="/system/categories" component={Categories} />

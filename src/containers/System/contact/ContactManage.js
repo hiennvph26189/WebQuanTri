@@ -169,7 +169,6 @@ class ContactManage extends Component {
                 )
             }
         let arrContact = this.state.arrContact;
-        console.log("logg>>>>>>>>>>>.", this.state.phanhoi, this.state.tieude);
         return (
             <div className="container category-container">   
             <div className='title text-center'> Read Category</div>

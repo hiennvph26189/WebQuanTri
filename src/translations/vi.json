@@ -38,6 +38,7 @@
                 "product-manage": "Quản lý sản phẩm",
                 "categories": "Quản danh sách sản phẩm",
                 "news-manage": "Quản lý tin tức",
+                "payment": "Quản lý thanh toán",
                 "register-package-group-or-account": "Đăng ký gói dịch vụ cho nhóm/tài khoản"
             },
             "system-parameter": {

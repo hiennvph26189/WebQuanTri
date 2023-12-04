@@ -12,6 +12,7 @@ export const adminMenu =[
                 { name: 'menu.system.system-administrator.order-manage', link: '/system/order-manage' },
                 { name: 'menu.system.system-administrator.categories', link: '/system/categories' },
                 { name: 'menu.system.system-administrator.news-manage', link: '/system/news-manage' },
+                { name: 'menu.system.system-administrator.payment', link: '/system/thanhtoan-manage'},
                 
         ]
     },
