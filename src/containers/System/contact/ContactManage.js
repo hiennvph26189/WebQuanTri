@@ -191,11 +191,11 @@ class ContactManage extends Component {
                     return(
                         <>
                             <tr>
-                                <td>{item.id}</td>
+                                <td >{item.id}</td>
                                 <td>{item.name}</td>
                                 <td onClick={() => this.showChiTiet(item)}>{item.email}</td>
-                                <td>{item.comment}</td>
-                                <td>{item.phanhoi_admin}</td>
+                                <td >{item.comment}</td>
+                                <td >{item.phanhoi_admin}</td>
                                 <td>{this.formatDate(item.createdAt)}</td>
                                 <td>{this.formatDate(item.updatedAt)}</td>
                                 <td className='action'>
@@ -266,9 +266,6 @@ class ContactManage extends Component {
                 </Button>
             </ModalFooter>
         </Modal>
-
-       
-
 
         <Modal 
          isOpen={this.state.isOpenModal2}

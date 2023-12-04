@@ -19,6 +19,7 @@ class ThanhToan9Pay extends Component {
             id:0,
             id_donhang : 0 , 
             payment_no: '', 
+            invoice_no: '',
             card_name: '', 
             card_brand: '', 
             card_number: '', 
@@ -67,6 +68,7 @@ class ThanhToan9Pay extends Component {
             id: item.id,
             id_donhang : item.id_donhang , 
             payment_no: item.payment_no, 
+            invoice_no: item.invoice_no,
             card_name: item.card_name, 
             card_brand: item.card_brand, 
             card_number: item.card_number, 
@@ -134,6 +136,7 @@ class ThanhToan9Pay extends Component {
                         <th>id</th>
                         <th>id Don Hang</th>
                         <th>Mã Thanh Toán</th>
+                        <th>Mã Đơn Hàng</th>
                         <th>Chủ Thẻ</th>
                         <th >Loại Thẻ</th>
                         <th >Số Thẻ</th>
@@ -149,6 +152,7 @@ class ThanhToan9Pay extends Component {
                                 <td>{item.id}</td>
                                 <td>{item.id_donhang}</td>
                                 <td>{item.payment_no}</td>   
+                                <td>{item.invoice_no}</td>   
                                 <td>{item.card_name}</td>    
                                 <td>{item.card_brand}</td>
                                 <td>{item.card_number}</td>
@@ -209,7 +213,10 @@ class ThanhToan9Pay extends Component {
                             <h5><span style={{fontWeight:'600'}}>ID Đơn Hàng</span> : {this.state.id_donhang}</h5>
                                </div>
                                <div className='col-12 form-group mg-top'>
-                            <h5><span style={{color:'red',fontWeight:'600'}}>MÃ Thanh Toán</span> : {this.state.payment_no}</h5>
+                            <h5><span style={{color:'red',fontWeight:'600'}}>Mã Thanh Toán</span> : {this.state.payment_no}</h5>
+                               </div>
+                               <div className='col-12 form-group mg-top'>
+                            <h5><span style={{color:'red',fontWeight:'600'}}>Mã Đơn Hàng</span> : {this.state.invoice_no}</h5>
                                </div>
                                <div className='col-12 form-group mg-top'>
                             <h5><span style={{color:'red',fontWeight:'600'}}>Chủ Thẻ</span> : {this.state.card_name}</h5>
