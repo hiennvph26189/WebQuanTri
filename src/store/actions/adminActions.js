@@ -445,10 +445,16 @@ export const giaoOrderCart = (data) => {
             let res = await GiaoDonService(data)
               
             if(res && res.errCode === 0){
-                toast.success("Đã giao đơn thành công")
+                toast.success(res.errMessage)
                 // dispatch(updateHuyOrderSuccess())
                 dispatch(giaoOrderSuccess())
                 dispatch(fetchOrderProducts(data.statuss))
+            }else if(res.errCode === 2){
+                toast.error(res.errMessage)
+                // dispatch(updateHuyOrderSuccess())
+                dispatch(giaoOrderSuccess())
+                dispatch(fetchOrderProducts(data.statuss))
+               
             }else{
                 dispatch(giaoOrderFailed())
             }

@@ -36,7 +36,9 @@ class OrdersManage extends Component {
         this.props.fetchMembers()
         
      }
-   
+    loadData = (status)=>{
+        this.props.fetchOrderProducts(status)
+    }
     componentDidUpdate(prevProps, prevState,snapshot) {
        
        
@@ -165,7 +167,7 @@ class OrdersManage extends Component {
                     arrProducts = {this.state.arrProducts}
                     arrCarts = {this.state.arrCarts}
                     status = {this.state.status}
-                   
+                    loadData = {this.loadData}
 
                  
                 />
@@ -184,6 +186,7 @@ class OrdersManage extends Component {
                     <option value="3">Giao thành công </option>
                     <option value="4">Đơn chờ hủy</option>
                     <option value="5">Đơn đã hủy</option>
+                    <option value="10">Đơn đang bị lỗi</option>
                     </select>
                 </div>
                 <div className='category-table mt-4 mx-2'>
@@ -209,7 +212,7 @@ class OrdersManage extends Component {
                                     <td>{this.phoneMembers(item.idUser)}</td>
                                     <td style={{fontWeight:"600",color:"red"}}>{this.price(item.tongTien)}</td>
                                     <td style={{fontWeight:"600",color:item.status == 0 ? "#FF9900" : item.status == 1 ? "#0099FF" : item.status == 2 ? "#008B8B" : item.status == 3 ? "#006400" :item.status == 4?"#FF6347":"#8B0000"}}>
-                                    {item.status == 0 ? "Đang chờ xử duyệt đơn" : item.status == 1 ? "Đã xác nhận đơn hàng"  : item.status == 2 ? "Đơn đang giao" : item.status == 3 ? "Giao thành công"  :item.status == 4?"Đang Chờ xác nhận hủy đơn":"Đã hủy thành công"}</td>
+                                    {item.status == 0 ? "Đang chờ xử duyệt đơn" : item.status == 1 ? "Đã xác nhận đơn hàng"  : item.status == 2 ? "Đơn đang giao" : item.status == 3 ? "Giao thành công"  :item.status == 4?"Đang Chờ xác nhận hủy đơn":item.status == 5?"Đã hủy thành công":"Đơn hàng đang bị lỗi"}</td>
                                     <td>{this.formatDate(item.createdAt)}</td>
                                     
                                     <td className='action' style={{display:"flex", justifyContent:"center",alignItems:"center"}}>
