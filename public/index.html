@@ -22,10 +22,96 @@
     -->
   <title>ShopOnline</title>
 </head>
+<style>
+  .navigator-menu .menu-group .menu-list{
+    display: block !important;
+    position: unset !important;
+    height: 1300px;
+    background: #2d2b32 !important;
+  }
+  .navigator-menu .menu-group .menu-list .menu .menu-link{
+    color: #b8c7ce !important;
+  }
+  .navigator-menu .menu-group .menu-list .menu{
+    width: 100% !important;
+    height: auto !important;
+    border-bottom: 1px solid #555;
+    padding: 5px 15px !important;
+  }
+  .navigator-menu .menu-group .menu-list .menu:hover {
+    color: #fff;
+    background: #29b7d3 !important;
+}
+.navigator-menu .menu-group .menu-list .menu:hover a.menu-link{
+    color: #fff;
+    background: #29b7d3 !important;
+}
+.menu-list .active {
+  background: #29b7d3
+}
+.navigator-menu .menu-group .menu-list .active .menu-link {
+  color: #fff !important;
+}
+.menu:hover a{
+    color: #fff;
+}
+  .system-container{
+    display: flex;
+  }
+  .header-tabs-container{
+    width: 300px !important;
+    position: relative;
+    transition: .5s;
+  }
+  .navigator-menu{
+    display: block !important;
+  }
+  .menu-group-name{
+    display: none;
+  }
+  .system-list{
+    margin-left: 20px;
+    width: 100%;
+  }
+  .click-menu{
+    position: absolute;
+    right: 0;
+    margin-right: -35px;
+    
+  }
+  .left{
+    width: 20%;
+    margin-right: 30px;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+
+  }
+  .header-container .wellcome{
+    position: unset !important;
+    transform: unset !important;
+  }
+  .admin{
+    background-color: #25343a;
+    color: #f4a137;
+    border-bottom: 0 solid transparent;
+    font-size: 23px;
+    font-weight: 600;
+    margin: 0;
+  }
+  .header-container{
+    background-color: #212529 !important;
+    position: unset !important;
+    justify-content: space-between;
+    height: 50px !important;
+    align-items: center;
+  }
+</style>
 
 <body>
   <noscript>You need to enable JavaScript to run this app.</noscript>
   <div id="root"></div>
+ 
   <!--
       This HTML file is a template.
       If you open it directly in the browser, you will see an empty page.
@@ -36,6 +122,12 @@
       To begin the development, run `npm start` or `yarn start`.
       To create a production bundle, use `npm run build` or `yarn build`.
     -->
+    <script>
+ 
+      function myFunctionClick(){
+         console.log("LS:KSA");
+      }
+   </script>
 </body>
 
 </html>

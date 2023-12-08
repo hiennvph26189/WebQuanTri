@@ -18,10 +18,12 @@ class Header extends Component {
         return (
             <div className="header-container">
                 {/* thanh navigator */}
-                <div className="header-tabs-container">
-                    <Navigator menus={adminMenu} />
-                    <adminMenu roleID = {roleId}/>
+                <div className="" style={{display:"flex",justifyContent:"center", alignItems:"center", width:'255px', background:"#25343a", height:"100%"}} > 
+                   
+                    <h2 className='admin'>Myadmin</h2>
+                    
                 </div>
+                <div className='left'>
                 <div className='wellcome'>
                     <span>Well come {userInfo && Name ? Name: "" }</span>
                 </div>
@@ -29,6 +31,8 @@ class Header extends Component {
                 <div className="btn btn-logout" onClick={processLogout} title="Logout">
                     <i className="fas fa-sign-out-alt"></i>
                 </div>
+                </div>
+               
             </div>
         );
     }
