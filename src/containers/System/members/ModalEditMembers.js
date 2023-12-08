@@ -205,7 +205,7 @@ class ModalEditMembers extends Component {
                             <div className='col-12 row mg-top'>
                                 <div className='col-6 form-group'>
                                     <label>Họ và tên</label>
-                                    <input type="text" className="form-control" placeholder='Nhập tên' onChange={(event)=>this.handleOnChageInput(event,'tenThanhVien')} name="tenThanhVien" value={this.state.tenThanhVien}/>
+                                    <input disabled type="text" className="form-control" placeholder='Nhập tên' onChange={(event)=>this.handleOnChageInput(event,'tenThanhVien')} name="tenThanhVien" value={this.state.tenThanhVien}/>
                                 </div>
                                 <div className='col-6 form-group '>
                                     <label>Email</label>
@@ -220,14 +220,14 @@ class ModalEditMembers extends Component {
                                    
 
                                     {this.state.gioiTinh&&this.state.gioiTinh === 1 ?
-                                         <select name="roleID" class="form-select" onChange={(event)=>this.handleOnChageInput(event,'gioiTinh')} value={this.state.gioiTinh}>
+                                         <select disabled name="roleID" class="form-select" onChange={(event)=>this.handleOnChageInput(event,'gioiTinh')} value={this.state.gioiTinh}>
                                             <option   value="0">---- Chọn giới tính -----</option>
                                             <option selected value="1">Nam</option>
                                             <option  value="2">Nữ</option>
                                             <option  value="3">Khác</option>
                                          </select>
                                     : 
-                                         <select name="roleID" class="form-select" onChange={(event)=>this.handleOnChageInput(event,'gioiTinh')} value={this.state.gioiTinh}>
+                                         <select disabled name="roleID" class="form-select" onChange={(event)=>this.handleOnChageInput(event,'gioiTinh')} value={this.state.gioiTinh}>
                                             <option   value="0">---- Chọn giới tính -----</option>
                                             <option  value="1">Nam</option>
                                             <option selected  value="2">Nữ</option>
@@ -235,14 +235,14 @@ class ModalEditMembers extends Component {
                                          </select>
                                     &&
                                     this.state.gioiTinh&&this.state.gioiTinh === 3?
-                                         <select name="roleID" class="form-select" onChange={(event)=>this.handleOnChageInput(event,'gioiTinh')} value={this.state.gioiTinh}>
+                                         <select disabled name="roleID" class="form-select" onChange={(event)=>this.handleOnChageInput(event,'gioiTinh')} value={this.state.gioiTinh}>
                                             <option   value="0">---- Chọn giới tính -----</option>
                                             <option  value="1">Nam</option>
                                             <option  value="2">Nữ</option>
                                             <option selected value="3">Khác</option>
                                          </select>
                                   :
-                                         <select name="roleID" class="form-select" onChange={(event)=>this.handleOnChageInput(event,'gioiTinh')} value={this.state.gioiTinh}>
+                                         <select disabled name="roleID" class="form-select" onChange={(event)=>this.handleOnChageInput(event,'gioiTinh')} value={this.state.gioiTinh}>
                                             <option selected  value="0">---- Chọn giới tính -----</option>
                                             <option  value="1">Nam</option>
                                             <option  value="2">Nữ</option>
@@ -254,12 +254,12 @@ class ModalEditMembers extends Component {
                                 </div>
                                 <div className='col-3 form-group mg-top'>
                                 <label>Số điện thoại</label>
-                                <input type="text" className="form-control" placeholder='Nhập số điện thoại' onChange={(event)=>this.handleOnChageInput(event,'soDienThoai')} name="soDienThoai" value={this.state.soDienThoai}/>
+                                <input disabled type="text" className="form-control" placeholder='Nhập số điện thoại' onChange={(event)=>this.handleOnChageInput(event,'soDienThoai')} name="soDienThoai" value={this.state.soDienThoai}/>
                                 
                             </div>
                             <div className='col-6 form-group mg-top'>
                                 <label>Địa chỉ</label>
-                                <input type="text" className="form-control" placeholder='Nhập địa chỉ' onChange={(event)=>this.handleOnChageInput(event,'diaChi')} name="name" value={this.state.diaChi}/>
+                                <input disabled type="text" className="form-control" placeholder='Nhập địa chỉ' onChange={(event)=>this.handleOnChageInput(event,'diaChi')} name="name" value={this.state.diaChi}/>
                             </div>
                            
                             </div>
@@ -270,15 +270,15 @@ class ModalEditMembers extends Component {
                             </div>
                             <div className='col-6 form-group '>
                                     <label>Tiền tài khoản</label>
-                                    <input  type="number" min={0} className="form-control" placeholder='Nhập tiền Tài khoản' onChange={(event)=>this.handleOnChageInput(event,'tienTk')} name="tienTk" value={this.state.tienTk}/>
+                                    <input disabled type="number" min={0} className="form-control" placeholder='Nhập tiền Tài khoản' onChange={(event)=>this.handleOnChageInput(event,'tienTk')} name="tienTk" value={this.state.tienTk}/>
                                 </div>
                             <div className=' col-12 row'>
                                 <div className='col-3 form-group mg-top'>
                                     <label>Ảnh đại diện</label>
-                                    <div className='upload-image'>
+                                    {/* <div className='upload-image'>
                                         <label htmlFor='taianh' className='text_image'>Tải ảnh <i class="fas fa-upload"></i></label>
                                         <input id='taianh' hidden type="file" onChange={(e)=>this.handleImage2(e,"image")} multiple />
-                                    </div>
+                                    </div> */}
                                     
                                 </div>
   
@@ -290,7 +290,7 @@ class ModalEditMembers extends Component {
                              
                              <div className='col-md-4 col-sm-12 ' style={{position:"relative",marginTop:'10px'}} >
                                  <img style={{ maxWidth:'230px'}} onClick={()=>this.openImage()} src={url}/>
-                                 <span onClick={()=>this.DeleteImage(url)} className='p-2 cursor-pointer hover:bg-gray-400' style={{   
+                                 {/* <span onClick={()=>this.DeleteImage(url)} className='p-2 cursor-pointer hover:bg-gray-400' style={{   
                                      position: 'absolute',
                                      cursor: "pointer",
                                      right:'0%',
@@ -306,7 +306,7 @@ class ModalEditMembers extends Component {
                                      
                                  }}
                                      >
-                                         <i className="fas fa-trash"></i></span>
+                                         <i className="fas fa-trash"></i></span> */}
                       
                      </div>
                      </div>

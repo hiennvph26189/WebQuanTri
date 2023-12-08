@@ -214,7 +214,7 @@ class Members extends Component {
 
                                 <td className='action'>
                                 <button onClick={()=>this.handleEditMembers(item)} class="btn btn-success mx-1 px-2 ">Edit</button>
-                                <button  onClick={()=>this.handleDeleteMembers(item.id)} class="btn btn-danger  px-2">Delete</button>
+                                {/* <button  onClick={()=>this.handleDeleteMembers(item.id)} class="btn btn-danger  px-2">Delete</button> */}
                                 
                                 </td>
                             </tr>

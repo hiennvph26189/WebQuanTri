@@ -83,10 +83,6 @@ class ThanhToan9Pay extends Component {
             isOpenModal: !this.state.isOpenModal
         })
     }
-
-
-   
-
         render() {
             let arrPagetion = [];
             for ( let i = 1; i <= this.state.TongTrang; i++){
