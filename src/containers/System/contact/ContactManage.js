@@ -171,7 +171,7 @@ class ContactManage extends Component {
         let arrContact = this.state.arrContact;
         return (
             <div className="container category-container">   
-            <div className='title text-center'> Read Category</div>
+            <div className='title text-center'> Read Contact</div>
             <div className='category-table mt-4 mx-2'>
             <table id="customers" class="ws-table-all">
                 <tbody>

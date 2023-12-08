@@ -72,7 +72,7 @@ export const fetchProducts = (page) => {
             let res = await getAllProducts(page)
             if(res && res.errCode === 0){
               
-                console.log(res.products,"hien2")
+               
                 dispatch(fetchProductsSuccess(res.products ,res.totalProducts) )
             }else{
                 dispatch(fetchProductsFailed())
@@ -216,16 +216,16 @@ export const createNewImageFailed = () => ({
 
 
 
-export const fetchMembers = () => {
+export const fetchMembers = (page) => {
     return async(dispatch,getState)=>{
         try {
            
-            let res = await getAllMembers()
+            let res = await getAllMembers(page)
             
             if(res && res.errCode === 0){
                 
                 // console.log(res.products)
-                dispatch(fetchMembersSuccess(res.data.reverse()))
+                dispatch(fetchMembersSuccess(res.data))
             }else{
                 dispatch(fetchMembersFailed())
             }
@@ -344,11 +344,11 @@ export const updateHuyMembersPriceFailed = () => ({
     type: actionTypes.HUY_PRICES_FAILED,
 })
 
-export const fetchOrderProducts = (status) => {
+export const fetchOrderProducts = (status,page) => {
     return async(dispatch,getState)=>{
        
         try {
-            let res = await getAllOrders(status)
+            let res = await getAllOrders(status,page)
               
             if(res && res.errCode === 0){
                 dispatch(fetchOrderProductsSuccess(res.getAllOrder,res.getCarts))
@@ -549,7 +549,7 @@ export const editMember = (data) => {
                 toast.success("Đã Sửa Thành viên")
                 // dispatch(updateHuyOrderSuccess())
                 dispatch(editMemberSuccess())
-                dispatch(fetchMembers())
+                dispatch(fetchMembers(data.page))
             }else{
                 toast.error(res.errMessage)
                 dispatch(editMemberFailed())

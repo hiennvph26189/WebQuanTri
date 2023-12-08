@@ -9,9 +9,9 @@ import vi from "moment/locale/vi";
 import fr from "moment/locale/fr";
 // import ModalOrders from './ModalOrders';
 import ModalEditOrder from './ModalEditOrder';
-// import { getAllUOrdersManage,createNewOrdersManage,deleteOrdersManageService,editOrdersManageService } from '../../services/OrdersManageService';
-
-
+import { getAllOrders } from '../../../services/OrdersService';
+import { GET_ADDRESS_ORDER_DETAIL ,PUT_MA_VAN_DON_ORDER} from '../../../API';
+import axios  from "../../../axios";
 class OrdersManage extends Component {
     
     constructor(props){
@@ -23,7 +23,9 @@ class OrdersManage extends Component {
             arrMembers:[],
             isOpenEditOrderModal: false,
             itemEditOrder: {},
-            status: "All"
+            status: "All",
+            page:1, 
+            totalPage:0
 
         }
         
@@ -31,13 +33,47 @@ class OrdersManage extends Component {
 
    
     async componentDidMount() {
-        this.props.fetchOrderProducts(this.state.status)
+        this.props.fetchOrderProducts(this.state.status,this.state.page)
         this.props.fetchProducts()
         this.props.fetchMembers()
+        this.loadData(this.state.status,this.state.page)
         
      }
-    loadData = (status)=>{
-        this.props.fetchOrderProducts(status)
+    loadData = async(status,page)=>{
+        let data = await getAllOrders(status,page)  
+        this.setState({
+            arrOrders: data.getAllOrder,
+            totalPage: data.totalCount
+        })
+       
+    }
+    loadDataPanigate = async(status,page)=>{
+        let data = await getAllOrders(status,page)  
+        this.setState({
+            arrOrders: data.getAllOrder,
+            totalPage: data.totalCount
+        })
+    }
+    pagePev =async (status,page)=>{
+        let data = await getAllOrders(status,page)  
+        this.setState({
+            arrOrders: data.getAllOrder,
+            totalPage: data.totalCount,
+            page:page,
+            status:status
+        })
+    }
+    pageNext = async(status,page)=>{
+        
+        let data = await getAllOrders(status,page) 
+        console.log(page, "Page"); 
+        console.log(this.state.totalPage, "totalPage"); 
+        this.setState({
+            arrOrders: data.getAllOrder,
+            totalPage: data.totalCount,
+            page:page,
+            status:status
+        })
     }
     componentDidUpdate(prevProps, prevState,snapshot) {
        
@@ -64,16 +100,18 @@ class OrdersManage extends Component {
         }
         
     }
-    nameMembers = (idUser)=>{
-        let name = ""
-        this.state.arrMembers.map((item)=>{
-            if(idUser===item.id){
-                name = item.tenThanhVien
-            }
-        })
-        
-        return name
-    }
+    // nameMembers = (id_address)=>{
+    //     let name = ''
+    //     if(id_address){
+    //         axios.get(`${GET_ADDRESS_ORDER_DETAIL}?id_address=${id_address}`).then((res)=>{
+    //            return  res.itemAddress.hoTen
+              
+    //         }).catch((err)=>{console.log(err);})
+    //     }
+       
+       
+       
+    // }
     phoneMembers = (idUser)=>{
         let phone = ""
         this.state.arrMembers.map((item)=>{
@@ -143,18 +181,56 @@ class OrdersManage extends Component {
             this.props.deleteOrderCart(id,this.state.status)
         }
     }
-    handleOnChageInput = (event) => {
+    handleOnChageInput = async(event) => {
         // console.log(event.target.value,id)
        
         this.setState({
-           status: event.target.value
+           status: event.target.value,
+           page:1
         })
-        this.props.fetchOrderProducts(event.target.value)
-        
+        this.props.fetchOrderProducts(event.target.value,1)
+        this.loadData(event.target.value,1)
     }
     render() {
        console.log(this.state.arrMembers,"Members")
        let arrOrders = this.state.arrOrders
+       let status = this.state.status
+       let arrPagetion = [];
+       for ( let i = 1; i <= this.state.totalPage; i++){
+           console.log(i)
+           arrPagetion.push(
+               <>
+               {
+               i === this.state.page?
+               <li class="page-item disabled">
+               <button class="page-link"
+               key={i}
+               onClick={() => {this.loadDataPanigate(status,i)
+                   this.setState({
+                       page: i
+                   })
+               }  }
+           
+           >
+           {i}
+         </button></li>
+               :
+               <li class="page-item ">
+               <button class="page-link"
+               key={i}
+               onClick={() => {this.loadDataPanigate(status,i)
+                   this.setState({
+                       page: i
+                   })
+               }  }
+           
+           >
+           {i}
+         </button></li>
+           }
+               </>
+           )
+       }
         return (
             <div className="container category-container">
                 
@@ -175,7 +251,7 @@ class OrdersManage extends Component {
                     
                
                  
-                <div className='title text-center'> Read Orders</div>
+                <div className='title text-center'> Read Orders {this.state.page}</div>
                 <div className='col-3 form-group mg-top'>
              
                     <select name="roleID" class="form-control" onChange={(event)=>this.handleOnChageInput(event)} value={this.state.status}>
@@ -208,8 +284,8 @@ class OrdersManage extends Component {
                         return(
                             <>
                                 <tr>
-                                    <td>{this.nameMembers(item.idUser)}</td>
-                                    <td>{this.phoneMembers(item.idUser)}</td>
+                                    <td>{item.hoTen}</td>
+                                    <td>{item.soDienThoai}</td>
                                     <td style={{fontWeight:"600",color:"red"}}>{this.price(item.tongTien)}</td>
                                     <td style={{fontWeight:"600",color:item.status == 0 ? "#FF9900" : item.status == 1 ? "#0099FF" : item.status == 2 ? "#008B8B" : item.status == 3 ? "#006400" :item.status == 4?"#FF6347":"#8B0000"}}>
                                     {item.status == 0 ? "Đang chờ xử duyệt đơn" : item.status == 1 ? "Đã xác nhận đơn hàng"  : item.status == 2 ? "Đơn đang giao" : item.status == 3 ? "Giao thành công"  :item.status == 4?"Đang Chờ xác nhận hủy đơn":item.status == 5?"Đã hủy thành công":"Đơn hàng đang bị lỗi"}</td>
@@ -229,7 +305,32 @@ class OrdersManage extends Component {
                   
                         
                         
-                    </tbody></table>
+                    </tbody>
+                    </table>
+                    <nav aria-label="Page navigation example" style={{marginTop:'10px'}}>
+                        <ul class="pagination">
+                            {this.state.page === 1?
+                                 <li class="page-item disabled">
+                                 <button class="page-link" tabindex="-1">Previous</button>
+                                 </li>
+                            :
+                            <li class="page-item ">
+                                 <button class="page-link"  onClick={() =>this.pagePev(status,this.state.page -1)} >Previous</button>
+                                 </li>
+                            }
+                            {arrPagetion}
+                          {
+                            this.state.totalPage == this.state.page ?
+                            <li class="page-item disabled">
+                                 <button class="page-link" tabindex="-1">Next</button>
+                                 </li>
+                                 :
+                            <li class="page-item ">
+                             <button class="page-link" onClick={() => this.pageNext(status,this.state.page +1)}>Next</button>
+                             </li>
+                          }    
+                        </ul>
+                    </nav>
                 </div>
             </div>
         )
@@ -250,7 +351,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     
     return {
-        fetchOrderProducts: (status)=> dispatch(actions.fetchOrderProducts(status)),
+        fetchOrderProducts: (status,page)=> dispatch(actions.fetchOrderProducts(status,page)),
         fetchProducts: ()=> dispatch(actions.fetchAllProducts()),
         fetchMembers: ()=> dispatch(actions.fetchMembers()),
         deleteOrderCart: (id,status)=> dispatch(actions.deleteOrderCart(id,status))

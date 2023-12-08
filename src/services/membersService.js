@@ -1,6 +1,6 @@
 import axios  from "../axios";
-const getAllMembers = ()=>{
-    return axios.get(`/api/get-all-members`)
+const getAllMembers = (page)=>{
+    return axios.get(`/api/get-all-members?page=${page}`)
 }
 const createNewMembers = (data)=>{
     return axios.post(`/api/add-member`,data)

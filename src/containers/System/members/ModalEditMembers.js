@@ -108,6 +108,8 @@ class ModalEditMembers extends Component {
                 diaChi: this.state.diaChi,
                 tienTk: this.state.tienTk,
                 id: this.state.id,
+                page: this.props.page
+                
             })
             this.setState({
                 tenThanhVien: '',
@@ -117,12 +119,13 @@ class ModalEditMembers extends Component {
                  anhDaiDien:"",
                  matKhau:"",
                 diaChi: "",
-                status: ''
+                status: ''  
             })
            
             
             this.props.toggleFromParent()
         }
+      
        
     }
     componentDidUpdate(prevProps, prevState,snapshot) {
