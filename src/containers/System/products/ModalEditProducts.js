@@ -303,7 +303,7 @@ class ModalEditProducts extends Component {
          isOpen={this.props.isOpen}
          toggle={()=>this.toggle()}
          className={"modalConttailer"}
-         size= 'lg'
+         size= 'xl'
          centered 
          >
             <ModalHeader toggle={()=>this.toggle()}>Create New Products</ModalHeader>

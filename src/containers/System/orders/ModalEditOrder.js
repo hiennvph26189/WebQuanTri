@@ -16,9 +16,10 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import axios  from "../../../axios";
 import { UPDATE_ORDER_STATUS } from '../../../API';
 import Moment from 'moment';
+
 import vi from "moment/locale/vi";
 import fr from "moment/locale/fr";
-import { GET_ADDRESS_ORDER_DETAIL ,PUT_MA_VAN_DON_ORDER} from '../../../API';
+import { GET_ADDRESS_ORDER_DETAIL ,PUT_MA_VAN_DON_ORDER,GET_METHUD_THANH_TOAN_ORDER,HOAN_TIEN_ORDER} from '../../../API';
 class ModalEditOrder extends Component {
     
     constructor(props) {
@@ -33,8 +34,9 @@ class ModalEditOrder extends Component {
             idOrder: 0,
             note_order:"",
             itemAdress:{},
-            mavandon:''
-           
+            mavandon:'',
+            itemThanhToan: {},
+            alert: false
 
         }
        
@@ -48,7 +50,7 @@ class ModalEditOrder extends Component {
     }
     async componentDidMount () {
     let itemEditOrders = this.props.itemEditOrder
-    
+    this.getMetodThanhToan()
     if(itemEditOrders&&!_.isEmpty(itemEditOrders))
         this.getAddresOrder(itemEditOrders.id_address)
        this.setState({
@@ -73,6 +75,19 @@ class ModalEditOrder extends Component {
                     itemAdress: res.itemAddress
                 })
                 console.log(res.itemAddress);
+            }).catch((err)=>{console.log(err);})
+        }
+    }
+   
+    getMetodThanhToan = ()=>{
+        let id_order = this.props.itemEditOrder.id
+       
+        if(id_order){
+            axios.get(`${GET_METHUD_THANH_TOAN_ORDER}?id_order=${id_order}`).then((res)=>{
+                this.setState({
+                    itemThanhToan: res.selectThanhToan
+                })
+               console.log(res.selectThanhToan, "SDSJ:DS:DJ:SD:SJDS2401830132");
             }).catch((err)=>{console.log(err);})
         }
     }
@@ -227,7 +242,7 @@ class ModalEditOrder extends Component {
            
         })
     }
-        console.log(idSp,"asd;aks;dk")
+       
         idSp.map((item)=>{
             this.props.arrProducts.map((product)=>{
                 if(item.ipSanPham == product.id){
@@ -329,16 +344,29 @@ class ModalEditOrder extends Component {
         })
         return count
     }
-    handleHuyDon = ()=>{
+    handleHuyDon = (method,id_order,status)=>{
        
-        this.props.HuyOrderCart({
-            id: this.state.idOrder,
-            arrCarts:JSON.stringify(this.state.idCart),
-            idUser: this.state.idUser,
-            tongTien: this.state.tongTien,
-            status: this.props.status
-        })
-        this.toggle()
+        let data = {
+            id_order:id_order,
+            method:method
+        }
+        
+        if(method == "TK"){
+            axios.put(HOAN_TIEN_ORDER,data).then((res)=>{
+                if(res.errCode == 0){
+                    this.props.loadData(status,this.props.page) 
+                    toast.success(res.errMessage)  
+                    this.toggle()
+                }else{
+                    toast.error(res.errMessage)  
+                }
+            }).catch((err)=>{console.log(err);})
+           
+        }else{
+            this.setState({
+                alert:true
+            })
+        }
     }
     handleXacNhanDatDon = (mavandon,id_order)=>{
         if(mavandon !=""){
@@ -350,10 +378,11 @@ class ModalEditOrder extends Component {
             axios.put(PUT_MA_VAN_DON_ORDER,data).then((res)=>{
                if(res.errCode == 0){
                     toast.success(res.errMessage)
-                    this.props.loadData(1)
+                    this.props.loadData(this.props.status, this.props.page)
                     this.toggle()
                 }else{
                     toast.error(res.errMessage)
+                    this.props.loadData(this.props.status, this.props.page)
                 }
                     
             }).catch((err)=>{console.log(err);})
@@ -364,27 +393,99 @@ class ModalEditOrder extends Component {
     }
     handleEditMembers = (id,status)=>{
         let data = {}
-        if(id&&status){
+        if(id){
             
             this.props.giaoOrderCart({
                 id: id,
                 status: status,
-                statuss: this.props.status
+                statuss: this.props.status,
+                page:this.props.page
                 
             })
+            
             this.toggle()
+        }else{
+            alert("Lỗi")
         }
-        
+        this.props.loadData(0, this.props.page)
+    }
+    handleHoanDon = (method,id_order,status)=>{
+            let data = {
+                id_order:id_order,
+                method:method
+            }
+            
+            if(method == "TK"){
+                axios.put(HOAN_TIEN_ORDER,data).then((res)=>{
+                    if(res.errCode == 0){
+                        this.props.loadData(status,this.props.page) 
+                        toast.success(res.errMessage)  
+                        this.toggle()
+                    }else{
+                        toast.error(res.errMessage)  
+                    }
+                }).catch((err)=>{console.log(err);})
+               
+            }else{
+                this.setState({
+                    alert:true
+                })
+            }
+    }
+    hoanTien9Pay = (method,id_order,status)=>{
+        let data = {
+            id_order:id_order,
+            method:method
+        }
+       
+        axios.put(HOAN_TIEN_ORDER,data).then((res)=>{
+            if(res.errCode == 0){
+                this.props.loadData(status,this.props.page) 
+                toast.success(res.errMessage)  
+                this.toggle()
+                this.alert()
+            }else{
+                toast.error(res.errMessage)  
+                this.alert()
+            }
+        }).catch((err)=>{console.log(err);})
+    }
+    alert = ()=>{
+        this.setState({
+            alert:false
+        })
     }
     render() {  
        
         return (
-            
+            <>
+             <Modal 
+                isOpen={this.state.alert}
+                toggle={()=>this.alert()}
+                className={"modalConttailer"}
+                size= 'lg'
+                centered 
+                >
+                    <ModalHeader toggle={()=>this.alert()}>Thông báo</ModalHeader>
+                        <ModalBody>
+                            <div className='container'>
+                                <h3>Bạn đã hoàn lại tiền cho khách hàng qua 9Pay?</h3>
+                            </div>
+                        </ModalBody>
+                        <ModalFooter>
+                        <Button color="success" className='px-2' onClick={()=>this.hoanTien9Pay(this.state.itemThanhToan.method,this.state.idOrder,this.props.status)}>
+                            Tôi đã hoàn
+                        </Button>{' '}
+                        <Button color="danger" className='px-2' onClick={()=>this.alert()}>
+                            Chưa thanh toán
+                        </Button>
+                    </ModalFooter>
+                </Modal>
         <Modal 
          isOpen={this.props.isOpen}
          toggle={()=>this.toggle()}
          className={"modalConttailer"}
-         size= 'lg'
+         size= 'xl'
          centered 
          >
             <ModalHeader toggle={()=>this.toggle()}>Create New Members</ModalHeader>
@@ -405,10 +506,7 @@ class ModalEditOrder extends Component {
                                         <label style={{width:"20%",fontWeight:"bold"}}>Số điện thoại: </label>
                                         <p >{this.state.itemAdress.soDienThoai}</p>
                                     </div>
-                                    <div className='' style={{display:"flex",width:"100%"}}>
-                                        <label style={{width:"20%",fontWeight:"bold"}}>Email: </label>
-                                        <p >{this.emailMembers()}</p>
-                                    </div>
+                                    
                                     <div className='' style={{display:"flex",width:"100%"}}>
                                         <label style={{width:"20%",fontWeight:"bold"}}>Địa chỉ nhận: </label>
                                         <p >{this.state.itemAdress.diaChi}</p>
@@ -427,25 +525,49 @@ class ModalEditOrder extends Component {
                                         }
                                        
                                     </div> 
+                                   
+                                    {this.state.itemThanhToan.method == "TK"?
+                                        <div className='' style={{display:"flex",width:"100%"}}>
+                                            <label style={{width:"20%",fontWeight:"bold"}}>Phương thức thanh toán: </label>
+                                            
+                                            <p style={{fontWeight:600, color:"green"}}> Thanh toán bằng tiền trong tài khoản</p>
+                                        </div>
+                                    :
+                                    <>
                                     <div className='' style={{display:"flex",width:"100%"}}>
+                                        <label style={{width:"20%",fontWeight:"bold"}}>Phương thức thanh toán: </label>
+                                        
+                                        <p style={{fontWeight:600, color:"green"}}>Ví 9Pay</p>
+                                    </div>
+                                    <div className='' style={{display:"flex",width:"100%"}}>
+                                        <label style={{width:"20%",fontWeight:"bold"}}>Mã thanh toán 9Pay: </label>
+                                        
+                                        <p style={{fontWeight:600,}}>{this.state.itemThanhToan.payment_no}</p>
+                                    </div>
+                                    </>
+                                    
+                                    }
+                                      <div className='' style={{display:"flex",width:"100%"}}>
                                         <label style={{width:"20%",fontWeight:"bold"}}>Trạng thái: </label>
-                                        <span style={{fontWeight:"600",color:this.state.status == 0 ? "#FF9900" : this.state.status == 1 ? "#0099FF" : this.state.status == 2 ? "#008B8B" : this.state.status == 3 ? "#006400" :this.state.status == 4?"#FF6347":"#8B0000"}}>
-                                        {this.state.status == 0 ? "Đang chờ xử lý" : this.state.status == 1 ? "Đã xác nhận đơn hàng" : this.state.status == 2 ? "Đơn đang giao" : this.state.status == 3 ? "Giao thành công"  :this.state.status == 4?"Chờ xác nhận hủy đơn ":this.state.status == 4?"Đã hủy thành công":"Đơn hàng đang lỗi hết sản phẩm"}</span>
+                                        <span style={{fontWeight:"600",color:this.state.status == 0 ? "#FF9900" : this.state.status == 1 ? "#0099FF" : this.state.status == 2 ? "#008B8B" : this.state.status == 3 ? "#006400" :this.state.status == 4?"#FF6347":this.state.status == 5?"#008B8B":this.state.status == 10?"rgb(139, 0, 0)":this.state.status == 11?"#006400":"#fff"}}>
+                                        {this.state.status == 0 ? "Đang chờ xử lý" : this.state.status == 1 ? "Đã xác nhận đơn hàng" : this.state.status == 2 ? "Đơn đang giao" : this.state.status == 3 ? "Giao thành công"  :this.state.status == 4?"Chờ xác nhận hủy đơn ":this.state.status == 5?"Đã hủy thành công, đơn hàng đã được hoàn tiền":this.state.status == 10?"Đơn hàng đang lỗi, hết sản phẩm trong kho":this.state.status == 11?"Đơn hàng đã được hoàn tiền":""}</span>
                                     </div> 
                                     {
-                                        this.state.status == 1 &&
+                                        this.state.status == 1 ?
                                         <div className='' style={{display:"flex", width:"100%", marginTop:"20px", alignItems:"center"}}>
                                         <label style={{width:"20%",fontWeight:"bold"}}>Mã vận đơn:</label>
                                         <input type="text" className="form-control" placeholder='Nhập mã vận đơn' onChange={(event)=>this.setState({
                                             mavandon: event.target.value
                                         })} name="name" value={this.state.soLuong} />
                                     </div>
+                                    :
+                                    null
                                     }
                                      {
                                         this.state.status == 2  ?
                                         <div className='' style={{display:"flex", width:"100%", marginTop:"20px", alignItems:"center"}}>
                                         <label style={{width:"20%",fontWeight:"bold"}}>Mã vận đơn:</label>
-                                        <p>{this.state.mavandon}</p>
+                                        <p style={{fontWeight:600}}>{this.state.mavandon}</p>
                                         
                                     </div>
                                     :null
@@ -491,7 +613,7 @@ class ModalEditOrder extends Component {
                 </ModalBody>
                 <ModalFooter>
                 {
-                   this.state.status === 0 && <Button color="warning" className='px-2' onClick={()=>this.handleEditMembers(this.state.idOrder,1)}>  Xác nhận đơn </Button>
+                   this.state.status === 0 && <Button color="warning" className='px-2' onClick={()=>this.handleEditMembers(this.state.idOrder,0)}>  Xác nhận đơn </Button>
                  
                
                 }{' '}
@@ -506,7 +628,7 @@ class ModalEditOrder extends Component {
                
                 }{' '}
                  {
-                   this.state.status === 4 &&  <Button color="success" className='px-2' onClick={()=>this.handleHuyDon()}>
+                   this.state.status === 4 &&  <Button color="success" className='px-2' onClick={()=>this.handleHuyDon(this.state.itemThanhToan.method,this.state.idOrder,4)}>
                    Xác Nhận Hủy Đơn
                </Button>
                  
@@ -514,7 +636,7 @@ class ModalEditOrder extends Component {
                 }
                {' '} 
                {
-                   this.state.status === 10 &&  <Button color="info" className='px-2' onClick={()=>this.handleHoanDon()}>
+                   this.state.status === 10 &&  <Button color="info" className='px-2' onClick={()=>this.handleHoanDon(this.state.itemThanhToan.method,this.state.idOrder,10)}>
                    Hoàn tiền
                </Button>
                  
@@ -522,7 +644,7 @@ class ModalEditOrder extends Component {
                 }
                {' '}
                {
-                   this.state.status === 10 &&  <Button color="success" className='px-2' onClick={()=>this.handleHoanDon()}>
+                   this.state.status === 10 &&  <Button color="success" className='px-2' onClick={()=>this.handleEditMembers(this.state.idOrder,10)}>
                    Tiếp tục mua hàng
                </Button>
                  
@@ -536,6 +658,8 @@ class ModalEditOrder extends Component {
 
             </ModalFooter>
         </Modal>
+            </>
+       
         )
     }
 
