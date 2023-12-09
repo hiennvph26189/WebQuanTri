@@ -44,7 +44,7 @@ class ContactManage extends Component {
                     arrContact: res.lienhe
 
                  });
-
+                 console.log(res);
              }
          }).catch((error) => { console.log(error) });
     }
@@ -116,6 +116,7 @@ class ContactManage extends Component {
         this.setState({
             page: this.state.page +1
         })
+        console.log("jsioajfioajsf")
     }
     showChiTiet = (item) => {
         this.setState({
@@ -171,7 +172,7 @@ class ContactManage extends Component {
         let arrContact = this.state.arrContact;
         return (
             <div className="container category-container">   
-            <div className='title text-center'> Read Category</div>
+            <div className='title text-center'> Read Contact</div>
             <div className='category-table mt-4 mx-2'>
             <table id="customers" class="ws-table-all">
                 <tbody>
@@ -193,9 +194,10 @@ class ContactManage extends Component {
                             <tr>
                                 <td >{item.id}</td>
                                 <td>{item.name}</td>
-                                <td onClick={() => this.showChiTiet(item)}>{item.email}</td>
-                                <td >{item.comment}</td>
-                                <td >{item.phanhoi_admin}</td>
+
+                                <td onClick={() => this.showChiTiet(item)} style={{cursor:"pointer"}}>{item.email}</td>
+                                <td>{item.comment}</td>
+                                <td>{item.phanhoi_admin}</td>
                                 <td>{this.formatDate(item.createdAt)}</td>
                                 <td>{this.formatDate(item.updatedAt)}</td>
                                 <td className='action'>

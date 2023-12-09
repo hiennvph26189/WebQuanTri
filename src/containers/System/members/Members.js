@@ -23,15 +23,34 @@ class Members extends Component {
             isOpenModalDanhSachNap: false,
             isOpenModalDeleteMember: false,
             idMember: {},
-            id:''
+            id:'',
+            page:1,
+            totalCount:0
         }
-    }
+    }   
     async componentDidMount() {
-        this.props.fetchMembers()
-        
-       
+      this.props.fetchMembers(this.state.page)
+        this.getALLMember(1)
+              
        
     }
+    getALLMember = async(page)=>{
+      let data = await  getAllMembers(page)
+     
+      this.setState({
+        totalCount:data.totalCount,
+        arrMembers: data.data
+      })
+    }
+    clickPage = async(page)=>{
+       
+        let data = await  getAllMembers(page)
+       
+        this.setState({
+          totalCount:data.totalCount,
+          arrMembers: data.data
+        })
+      }
     toggleEditMembersModal = ()=>{
         this.setState({
             isOpenEditMembersModal: !this.state.isOpenEditMembersModal
@@ -49,6 +68,28 @@ class Members extends Component {
         })
         
     } 
+    pagePev = async(page) => {
+        let data = await  getAllMembers(page)
+       
+        this.setState({
+          totalCount:data.totalCount,
+          arrMembers: data.data
+        })
+        this.setState({
+            page: page
+        })
+    }
+    pageNext = async(page) => {
+        let data = await  getAllMembers(page)
+       
+        this.setState({
+          totalCount:data.totalCount,
+          arrMembers: data.data
+        })
+        this.setState({
+            page: page
+        })
+    }
     handleEditMembersNapTien=(item)=>{
         
         this.setState({
@@ -103,7 +144,42 @@ class Members extends Component {
         
        
         let arrMembers = [...this.state.arrMembers]
-        console.log(this.state.isOpenModalDeleteMember,"ald;à;")
+        let arrPagetion = [];
+        for ( let i = 1; i <= this.state.totalCount; i++){
+            console.log(i)
+            arrPagetion.push(
+                <>
+                {
+                i === this.state.page?
+                <li class="page-item disabled">
+                <button class="page-link"
+                key={i}
+                onClick={() => {this.clickPage(i)
+                    this.setState({
+                        page: i
+                    })
+                }  }
+            
+            >
+            {i}
+          </button></li>
+                :
+                <li class="page-item ">
+                <button class="page-link"
+                key={i}
+                onClick={() => {this.clickPage(i)
+                    this.setState({
+                        page: i
+                    })
+                }  }
+            
+            >
+            {i}
+          </button></li>
+            }
+                </>
+            )
+        }
         return (
             <div className="container members-container">
             <ModalMembers
@@ -129,8 +205,8 @@ class Members extends Component {
                 isOpen = {this.state.isOpenEditMembersModal}
                 toggleFromParent = {this.toggleEditMembersModal}
                 currentMembers = {this.state.membersEdit}
-
-                
+                getALLMember= {this.getALLMember}
+                page = {this.state.page}
                  
             />
             }
@@ -214,7 +290,8 @@ class Members extends Component {
 
                                 <td className='action'>
                                 <button onClick={()=>this.handleEditMembers(item)} class="btn btn-success mx-1 px-2 ">Edit</button>
-                                {/* <button  onClick={()=>this.handleDeleteMembers(item.id)} class="btn btn-danger  px-2">Delete</button> */}
+
+                                {/* N<button  onClick={()=>this.handleDeleteMembers(item.id)} class="btn btn-danger  px-2">Delete</button> */}
                                 
                                 </td>
                             </tr>
@@ -227,8 +304,32 @@ class Members extends Component {
               
                     
                     
-                </tbody></table>
-               
+                </tbody>
+                </table>
+                <nav aria-label="Page navigation example" style={{marginTop:'10px'}}>
+                        <ul class="pagination">
+                            {this.state.page === 1?
+                                 <li class="page-item disabled">
+                                 <button class="page-link" tabindex="-1">Previous</button>
+                                 </li>
+                            :
+                            <li class="page-item ">
+                                 <button class="page-link"  onClick={() =>this.pagePev(this.state.page -1)} >Previous</button>
+                                 </li>
+                            }
+                            {arrPagetion}
+                          {
+                            this.state.totalCount == this.state.page ?
+                            <li class="page-item disabled">
+                                 <button class="page-link" tabindex="-1">Next</button>
+                                 </li>
+                                 :
+                            <li class="page-item ">
+                             <button class="page-link" onClick={() => this.pageNext(this.state.page +1)}>Next</button>
+                             </li>
+                          }    
+                        </ul>
+                    </nav>
             </div>
         </div>
         )
@@ -245,7 +346,7 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
     return {
        
-        fetchMembers: ()=> dispatch(actions.fetchMembers())
+        fetchMembers: (page)=> dispatch(actions.fetchMembers(page))
     };
 };
 

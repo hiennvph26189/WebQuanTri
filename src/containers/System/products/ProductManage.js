@@ -290,7 +290,7 @@ class ProductManage extends Component {
                                     <td className="manhinhdienthoai tablet maytinh">{item.luotMua}</td>
                                     <td className='action'>
                                     <button onClick={()=>this.handleEditProducts(item)} class="btn btn-success mx-1 px-2 ">Edit</button>
-                                    <button onClick={()=>this.handleDeleteProducts(item.id)} class="btn btn-danger  px-2">Delete</button>
+                                    <button onClick={()=>this.handleDeleteProducts(item.id)} class="btn btn-warning  px-2">Ẩn</button>
                                     </td>
                                 </tr>
                             </>

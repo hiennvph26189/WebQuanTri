@@ -9,14 +9,16 @@ import * as actions from '../../../store/actions';
 import Lightbox from 'react-image-lightbox';
 import 'react-image-lightbox/style.css';
 import _ from 'lodash';
+import { toast } from 'react-toastify';
 import  './product.scss';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import axios  from "../../../axios";
+import { UPDATE_ORDER_STATUS } from '../../../API';
 import Moment from 'moment';
 import vi from "moment/locale/vi";
 import fr from "moment/locale/fr";
-
+import { GET_ADDRESS_ORDER_DETAIL ,PUT_MA_VAN_DON_ORDER} from '../../../API';
 class ModalEditOrder extends Component {
     
     constructor(props) {
@@ -28,8 +30,10 @@ class ModalEditOrder extends Component {
             createdAt:"",
             lisProduts: [], 
             status: 0,
-            idOrder: 0
-            
+            idOrder: 0,
+            note_order:"",
+            itemAdress:{},
+            mavandon:''
            
 
         }
@@ -46,13 +50,15 @@ class ModalEditOrder extends Component {
     let itemEditOrders = this.props.itemEditOrder
     
     if(itemEditOrders&&!_.isEmpty(itemEditOrders))
+        this.getAddresOrder(itemEditOrders.id_address)
        this.setState({
             idUser: itemEditOrders.idUser,
             tongTien: itemEditOrders.tongTien,
             createdAt: itemEditOrders.createdAt,
             status: itemEditOrders.status,
             idOrder: itemEditOrders.id,
-           
+            mavandon: itemEditOrders.mavandon,
+            note_order: itemEditOrders.note_order,
             idCart:JSON.parse(itemEditOrders.idCart),
             
        })
@@ -60,7 +66,16 @@ class ModalEditOrder extends Component {
        
      
     }
-    
+    getAddresOrder = (id_address)=>{
+        if(id_address){
+            axios.get(`${GET_ADDRESS_ORDER_DETAIL}?id_address=${id_address}`).then((res)=>{
+                this.setState({
+                    itemAdress: res.itemAddress
+                })
+                console.log(res.itemAddress);
+            }).catch((err)=>{console.log(err);})
+        }
+    }
     toggle = () => {
         
         this.props.toggleFromParent()
@@ -325,19 +340,32 @@ class ModalEditOrder extends Component {
         })
         this.toggle()
     }
-    handleXacNhanDatDon = ()=>{
-        console.log(this.props.status.status)
-        this.props.checkOrderCart({
-            id: this.state.idOrder,
-            arrCarts:JSON.stringify(this.state.idCart),
-            idUser: this.state.idUser,
-            status: this.props.status
-            
-        })
-        this.toggle()
+    handleXacNhanDatDon = (mavandon,id_order)=>{
+        if(mavandon !=""){
+            let data = {
+                id_order: id_order,
+                mavandon:mavandon
+            }
+           
+            axios.put(PUT_MA_VAN_DON_ORDER,data).then((res)=>{
+               if(res.errCode == 0){
+                    toast.success(res.errMessage)
+                    this.props.loadData(1)
+                    this.toggle()
+                }else{
+                    toast.error(res.errMessage)
+                }
+                    
+            }).catch((err)=>{console.log(err);})
+            }else{
+                return alert("Vui lòng nhập mã vận đơn")
+            }
+      
     }
     handleEditMembers = (id,status)=>{
+        let data = {}
         if(id&&status){
+            
             this.props.giaoOrderCart({
                 id: id,
                 status: status,
@@ -371,11 +399,11 @@ class ModalEditOrder extends Component {
                                 <div className='info-order'>
                                     <div className='' style={{display:"flex",width:"100%"}}>
                                         <label style={{width:"20%",fontWeight:"bold"}}>Tên người nhận: </label>
-                                        <p >{this.nameMembers()}</p>
+                                        <p >{this.state.itemAdress.hoTen}</p>
                                     </div>
                                     <div className='' style={{display:"flex",width:"100%"}}>
                                         <label style={{width:"20%",fontWeight:"bold"}}>Số điện thoại: </label>
-                                        <p >{this.phoneMembers()}</p>
+                                        <p >{this.state.itemAdress.soDienThoai}</p>
                                     </div>
                                     <div className='' style={{display:"flex",width:"100%"}}>
                                         <label style={{width:"20%",fontWeight:"bold"}}>Email: </label>
@@ -383,7 +411,7 @@ class ModalEditOrder extends Component {
                                     </div>
                                     <div className='' style={{display:"flex",width:"100%"}}>
                                         <label style={{width:"20%",fontWeight:"bold"}}>Địa chỉ nhận: </label>
-                                        <p >{this.addressMembers()}</p>
+                                        <p >{this.state.itemAdress.diaChi}</p>
                                     </div>
                                     <div className='' style={{display:"flex",width:"100%"}}>
                                         <label style={{width:"20%",fontWeight:"bold"}}>Tổng tiền: </label>
@@ -402,8 +430,42 @@ class ModalEditOrder extends Component {
                                     <div className='' style={{display:"flex",width:"100%"}}>
                                         <label style={{width:"20%",fontWeight:"bold"}}>Trạng thái: </label>
                                         <span style={{fontWeight:"600",color:this.state.status == 0 ? "#FF9900" : this.state.status == 1 ? "#0099FF" : this.state.status == 2 ? "#008B8B" : this.state.status == 3 ? "#006400" :this.state.status == 4?"#FF6347":"#8B0000"}}>
-                                        {this.state.status == 0 ? "Đang chờ xử lý" : this.state.status == 1 ? "Đã xác nhận đơn hàng" : this.state.status == 2 ? "Đơn đang giao" : this.state.status == 3 ? "Giao thành công"  :this.state.status == 4?"Chờ xác nhận hủy đơn ":"Đã hủy thành công"}</span>
-                                    </div>    
+                                        {this.state.status == 0 ? "Đang chờ xử lý" : this.state.status == 1 ? "Đã xác nhận đơn hàng" : this.state.status == 2 ? "Đơn đang giao" : this.state.status == 3 ? "Giao thành công"  :this.state.status == 4?"Chờ xác nhận hủy đơn ":this.state.status == 4?"Đã hủy thành công":"Đơn hàng đang lỗi hết sản phẩm"}</span>
+                                    </div> 
+                                    {
+                                        this.state.status == 1 &&
+                                        <div className='' style={{display:"flex", width:"100%", marginTop:"20px", alignItems:"center"}}>
+                                        <label style={{width:"20%",fontWeight:"bold"}}>Mã vận đơn:</label>
+                                        <input type="text" className="form-control" placeholder='Nhập mã vận đơn' onChange={(event)=>this.setState({
+                                            mavandon: event.target.value
+                                        })} name="name" value={this.state.soLuong} />
+                                    </div>
+                                    }
+                                     {
+                                        this.state.status == 2  ?
+                                        <div className='' style={{display:"flex", width:"100%", marginTop:"20px", alignItems:"center"}}>
+                                        <label style={{width:"20%",fontWeight:"bold"}}>Mã vận đơn:</label>
+                                        <p>{this.state.mavandon}</p>
+                                        
+                                    </div>
+                                    :null
+                                    } 
+                                    {
+                                        this.state.status == 3  ?
+                                        <div className='' style={{display:"flex", width:"100%", marginTop:"20px", alignItems:"center"}}>
+                                        <label style={{width:"20%",fontWeight:"bold"}}>Mã vận đơn:</label>
+                                        <p>{this.state.mavandon}</p>
+                                        
+                                    </div>
+                                    :null
+                                    }
+                                    {this.state.note_order != ""&&
+                                        <div className='' style={{display:"flex",width:"100%"}}>
+                                        <label style={{width:"20%",fontWeight:"bold"}}>Đanh sách sản phẩm bị đang hết: </label>
+                                        <p style={{color:"red"}}>{this.state.note_order}</p>
+                                    </div> 
+                                    }   
+                                    
                                         
                                 </div>
                         </div>
@@ -434,7 +496,7 @@ class ModalEditOrder extends Component {
                
                 }{' '}
                  {
-                   this.state.status === 1 && <Button color="info" className='px-2' onClick={()=>this.handleXacNhanDatDon()}>   Giao đơn </Button>
+                   this.state.status === 1 && <Button color="info" className='px-2' onClick={()=>this.handleXacNhanDatDon(this.state.mavandon,this.state.idOrder)}>   Giao đơn </Button>
                  
                
                 }{' '}
@@ -446,6 +508,22 @@ class ModalEditOrder extends Component {
                  {
                    this.state.status === 4 &&  <Button color="success" className='px-2' onClick={()=>this.handleHuyDon()}>
                    Xác Nhận Hủy Đơn
+               </Button>
+                 
+               
+                }
+               {' '} 
+               {
+                   this.state.status === 10 &&  <Button color="info" className='px-2' onClick={()=>this.handleHoanDon()}>
+                   Hoàn tiền
+               </Button>
+                 
+               
+                }
+               {' '}
+               {
+                   this.state.status === 10 &&  <Button color="success" className='px-2' onClick={()=>this.handleHoanDon()}>
+                   Tiếp tục mua hàng
                </Button>
                  
                
