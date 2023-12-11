@@ -7,6 +7,8 @@ import { getAllProducts } from '../../../services/productsService';
 import * as actions from '../../../store/actions'
 import CurrencyFormat from 'react-currency-format';
 import  './product.scss';
+import { SEACRH_PRODUCT } from '../../../API';
+import axios  from "../../../axios";
 class ProductManage extends Component {
 
     constructor(props){
@@ -24,8 +26,9 @@ class ProductManage extends Component {
             // currentPage: 1,
             pageSize: 5,
             arrSearch: [],
-            search:""
-            
+            search:"",
+            countPageSearch: 0,
+            pageSearch:1,
         }
        }
      
@@ -128,34 +131,52 @@ class ProductManage extends Component {
             currentPage: this.state.currentPage -1
         })
     }
-    timKiemSanPham = (event)=>{
-            if(event.target.value){
-                const newData = this.state.arrSearch.filter((item)=>{
-                    const itemData = item.tenSp? item.tenSp.toUpperCase(): "".toUpperCase()
-                    const textData = event.target.value.toUpperCase()
-                    return itemData.indexOf(textData)> -1
-                })
-                if(newData){
-                   
+    timKiemSanPham = async(event)=>{
+        let key_search = event.target.value
+        this.setState({
+            search: event.target.value
+        })
+        if(key_search !=""){
+            await axios.get(`${SEACRH_PRODUCT}?key_search=${key_search}&page=${this.state.pageSearch}`).then((res)=>{
+               if(res.errCode == 0){
                     this.setState({
-                        search: event.target.value,
-                        arrProducts: newData
-
+                        arrProducts : res.data,
+                        countPageSearch: res.totalCount
                     })
-                }
-            }else{
-                this.setState({
-                    search: event.target.value,
-                    arrProducts: this.props.productsRedux
-
-                })
+               }else{
+                    this.setState({
+                        arrProducts : [],
+                        countPageSearch: 0
+                    })
+               }
+            }).catch((err)=>{console.log(err);})
+        }else{
+            this.setState({
+                search:""
+            })
+            this.props.fetchProducts(1) 
+        }
+       
+        
+    }
+    clickPatigationSearch = async(page)=>{
+        let search = this.state.search
+        
+        await axios.get(`${SEACRH_PRODUCT}?key_search=${search}&page=${page}`).then((res)=>{
+            if(res.errCode == 0){
+                 this.setState({
+                     arrProducts : res.data,
+                     countPageSearch: res.totalCount
+                 })
             }
+         }).catch((err)=>{console.log(err);})
     }
      render() {
         
        
         const { orders, totalProducts, currentPage, pageSize } = this.state;
         const pageCount = Math.ceil(totalProducts / pageSize);
+        let countPageSearch = this.state.countPageSearch
         this.showImage()
         let arrProducts = this.state.arrProducts;
         // arrProducts.forEach(item => {
@@ -166,6 +187,7 @@ class ProductManage extends Component {
         arrProducts.map((item)=>{
             count++
         })
+        let pageButtonsSearch = []
         let pageButtons = []
         for (let i = 1; i <= pageCount; i++) {
             pageButtons.push(
@@ -204,7 +226,43 @@ class ProductManage extends Component {
             );
            
           }
-
+          for (let i = 1; i <= countPageSearch; i++) {
+            pageButtonsSearch.push(
+                <>{
+                    i === currentPage?
+                    <li class="page-item disabled">
+                    <button class="page-link"
+                    key={i}
+                    onClick={() => {this.clickPatigationSearch(i)
+                        this.setState({
+                            currentPage: i
+                        })
+                    }  }
+                
+                >
+                {i}
+              </button></li>
+                    :
+                    <li class="page-item ">
+                    <button class="page-link"
+                    key={i}
+                    onClick={() => {this.clickPatigationSearch(i)
+                        this.setState({
+                            currentPage: i
+                        })
+                    }  }
+                
+                >
+                {i}
+              </button></li>
+                }
+                 
+                </>
+               
+              
+            );
+           
+          }
          
         return (
             <div className="container products-container">
@@ -306,33 +364,45 @@ class ProductManage extends Component {
                     </table>
                     <div className='pagination ' style={{marginTop:"10px"}}>
                    
-                    
-                    
-                    <nav aria-label="Page navigation example">
+                    {this.state.search !="" ?
+                        <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-center">
-                            {this.state.currentPage === 1?
-                                 <li class="page-item disabled">
-                                 <button class="page-link" tabindex="-1">Previous</button>
-                                 </li>
-                            :
-                            <li class="page-item ">
-                                 <button class="page-link"  onClick={() =>this.pagePev()} >Previous</button>
-                                 </li>
-                            }
-                            {pageButtons}
                             
-                            {count < 5?
-                                 <li class="page-item disabled">
-                                 <button class="page-link">Next</button>
-                                 </li>
-                            :   
-                                <li class="page-item ">
-                                 <button class="page-link" onClick={() => this.pageNext()}>Next</button>
-                                 </li>
-                            }
+                            {pageButtonsSearch}
+                            
+                           
                            
                         </ul>
                     </nav>
+                    :
+                    <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-center">
+                        {this.state.currentPage === 1?
+                             <li class="page-item disabled">
+                             <button class="page-link" tabindex="-1">Previous</button>
+                             </li>
+                        :
+                        <li class="page-item ">
+                             <button class="page-link"  onClick={() =>this.pagePev()} >Previous</button>
+                             </li>
+                        }
+                        {pageButtons}
+                        
+                        {count < 5?
+                             <li class="page-item disabled">
+                             <button class="page-link">Next</button>
+                             </li>
+                        :   
+                            <li class="page-item ">
+                             <button class="page-link" onClick={() => this.pageNext()}>Next</button>
+                             </li>
+                        }
+                       
+                    </ul>
+                </nav>
+                    }
+                    
+                    
                 </div>
                 </div>
             </div>
