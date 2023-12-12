@@ -30,13 +30,14 @@
             "header": "Hệ thống",
             "system-administrator": {
                 "header": "Quản trị hệ thống",
-                "contact": "Quản trị liên hệ",
+                "contact": "Quản lý liên hệ",
                 "order-manage": "Quản lý đơn hàng",
                 "thong-ke": "Thống kê doanh thu",
                 "user-manage": "Quản lý nhân viên",
                 "user-member": "Quản lý thành viên",
                 "product-manage": "Quản lý sản phẩm",
-                "categories": "Quản danh sách sản phẩm",
+                "categories": "Quản lý danh sách sản phẩm",
+                "hangsx": "Quản lý hãng sản xuất",
                 "news-manage": "Quản lý tin tức",
                 "payment": "Quản lý thanh toán",
                 "register-package-group-or-account": "Đăng ký gói dịch vụ cho nhóm/tài khoản"

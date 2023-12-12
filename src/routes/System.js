@@ -11,9 +11,9 @@ import NewsManage from '../containers/System/news/NewsManage';
 import ContactManage from '../containers/System/contact/ContactManage';
 import Navigator from "../components/Navigator"
 import { adminMenu } from '../containers/Header/menuApp';
-
 import Header from '../containers/Header/Header';
 import ThanhToan9Pay from '../containers/System/thanhtoan/ThanhToan9Pay';
+import Hangsx from '../containers/System/hangsx/Hangsx';
 class System extends Component {
     constructor(props) {
         super(props);
@@ -52,6 +52,9 @@ class System extends Component {
                         
                         <Route path="/system/order-manage" component={OrdersManage} />
                         <Route path="/system/categories" component={Categories} />
+
+                        <Route path="/system/hangsx" component={Hangsx} />
+                        
                         <Route path="/system/news-manage" component={NewsManage} />
                         <Route component={() => { return (<Redirect to={systemMenuPath} />) }} />
                     </Switch>

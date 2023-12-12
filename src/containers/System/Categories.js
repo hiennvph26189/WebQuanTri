@@ -19,8 +19,6 @@ class Categories extends Component {
             categoryEdit: {}
         }
        }
-
-   
     async componentDidMount() {
         await this.getAllCategoryfromReact();
         
