@@ -4,11 +4,12 @@ import { connect } from 'react-redux';
 import ModalNews from './ModalNews';
 import ModalEditNews from './ModalEditNews';
 import {getAllNews,addNewsService,deleteNewsService} from "../../../services/newService"
-import axios from 'axios';
+import axios from "../../../axios";
 import Moment from 'moment';
 import vi from "moment/locale/vi";
 import fr from "moment/locale/fr";
 import { toast } from 'react-toastify';
+import { GET_NEWS } from '../../../API';
 class NewsManage extends Component {
 
     constructor(props) {
@@ -17,22 +18,55 @@ class NewsManage extends Component {
             isOpenModal: false,
             isOpenEditNewsModal: false,
             arrNews: [],
-            itemNew : {}
+            itemNew : {},
+            TongTrang: 0,
+            page: 1,
         }
 
     }
     async componentDidMount() {
-        await this.getAllNews();
+         this.CallapiNews();
         
      }
-    getAllNews = async()=>{
-        let data = await getAllNews()
-        if(data.errCode === 0){
-            this.setState({
-                arrNews: data.news
-            })
-        }
+    // getAllNews = async()=>{
+    //     let data = await getAllNews()
+    //     if(data.errCode === 0){
+    //         this.setState({
+    //             arrNews: data.news
+    //         })
+    //     }
+    // }
+    CallapiNews = async () => {
+        await axios.get(`${GET_NEWS}?page=${this.state.page}`).then((res) => {
+            if (res.errCode == 0) {
+                this.setState({
+                    TongTrang : res.totalCount,
+                    arrNews: res.news
+                });
+                console.log(res.news,"okokoko")
+
+            }
+        }).catch((error) => { console.log(error) });
     }
+
+    CallPage = async (page) => {
+        this.setState({
+            page:page
+        });
+        await axios.get(`${GET_NEWS}?page=${page}`).then((res) => {
+            if (res.errCode == 0) {
+                this.setState({
+                    TongTrang : res.totalCount,
+                    arrNews: res.news
+                });
+                console.log(res)
+
+            }
+        }).catch((error) => { console.log(error) });
+    }
+
+ 
+
     handleAddNewNews = ()=>{
         this.setState({
             isOpenModal: true 
@@ -62,11 +96,49 @@ class NewsManage extends Component {
         if(id){
             await  deleteNewsService(id)
             toast.success("Đã Xóa tin tức")
-            this.getAllNews()
+            this.CallapiNews()
         }
     }
     render() {
-        console.log(this.state.arrNews,"aks;dakds")
+        console.log(this.state.arrNews,">>>>>>>>>>>>")
+        let arrPagetion = [];
+            for ( let i = 1; i <= this.state.TongTrang; i++){
+                console.log(i)
+                arrPagetion.push(
+                    <>
+                    {
+                    i === this.state.page?
+                    <li class="page-item disabled">
+                    <button class="page-link"
+                    key={i}
+                    onClick={() => {this.CallPage(i)
+                        this.setState({
+                            page: i
+                        })
+                    }  }
+                
+                >
+                {i}
+              </button></li>
+                    :
+                    <li class="page-item ">
+                    <button class="page-link"
+                    key={i}
+                    onClick={() => {this.CallPage(i)
+                        this.setState({
+                            page: i
+                        })
+                    }  }
+                
+                >
+                {i}
+              </button></li>
+                }
+                    </>
+                )
+            }
+
+
         let arrNews = this.state.arrNews
 
         return (
@@ -76,14 +148,14 @@ class NewsManage extends Component {
                     test = {'abc'}
                     toggleFromParent = {this.toggleNewsModal}
                     createNewNews = {this.createNewNews}
-                    loadNews = {this.getAllNews}
+                    loadNews = {this.CallapiNews}
                 />
                 {this.state.isOpenEditNewsModal &&
                     <ModalEditNews
                     isOpen = {this.state.isOpenEditNewsModal}
                     toggleFromParent = {this.toggleEditNewsModal}
                     currentNews = {this.state.itemNew}
-                    loadNews = {this.getAllNews}
+                    loadNews = {this.CallapiNews}
                     
 
                 />
@@ -131,6 +203,31 @@ class NewsManage extends Component {
   
                 </tbody>
             </table>
+            <nav aria-label="Page navigation example" style={{marginTop:'10px'}}>
+                        <ul class="pagination">
+                            {this.state.page === 1?
+                                 <li class="page-item disabled">
+                                 <button class="page-link" tabindex="-1">Previous</button>
+                                 </li>
+                            :
+                            <li class="page-item ">
+                                 <button class="page-link"  onClick={() =>this.CallPage(this.state.page-1)} >Previous</button>
+                                 </li>
+                            }
+                            {arrPagetion}
+                          {
+                            this.state.TongTrang == this.state.page ?
+                            <li class="page-item disabled">
+                                 <button class="page-link" tabindex="-1">Next</button>
+                                 </li>
+                                 :
+                            <li class="page-item ">
+                             <button class="page-link" onClick={() => this.CallPage(this.state.page+1)}>Next</button>
+                             </li>
+                          }    
+                        </ul>
+                    </nav>
+
             </div>
         </div>
         )
