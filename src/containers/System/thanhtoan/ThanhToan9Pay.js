@@ -46,6 +46,21 @@ class ThanhToan9Pay extends Component {
              }
          }).catch((error) => { console.log(error) });
     }
+    CallPage = async(page) => {
+        this.setState({
+            page:page
+        });
+        await axios.get(`${GET_THANH_TOAN}?page=${page}`).then((res) => {
+            console.log(res.data)
+             if (res.errCode == 0) {
+                  this.setState({
+                    TongTrang : res.totalCount,
+                    arrThanhToan: res.thanhtoan
+                 });
+
+             }
+         }).catch((error) => { console.log(error) });
+    }
     formatDate= (date)=>{
         const newFr = Moment(date).locale("vi", fr).format("DD/MM/YYYY HH:mm:ss");
         return newFr
@@ -94,7 +109,7 @@ class ThanhToan9Pay extends Component {
                     <li class="page-item disabled">
                     <button class="page-link"
                     key={i}
-                    onClick={() => {this.CallapiThanhToan()
+                    onClick={() => {this.CallPage(i)
                         this.setState({
                             page: i
                         })
@@ -107,7 +122,7 @@ class ThanhToan9Pay extends Component {
                     <li class="page-item ">
                     <button class="page-link"
                     key={i}
-                    onClick={() => {this.CallapiThanhToan()
+                    onClick={() => {this.CallPage(i)
                         this.setState({
                             page: i
                         })
@@ -173,7 +188,7 @@ class ThanhToan9Pay extends Component {
                                  </li>
                             :
                             <li class="page-item ">
-                                 <button class="page-link"  onClick={() =>this.pagePev()} >Previous</button>
+                                 <button class="page-link"  onClick={() =>this.CallPage(this.state.page-1)} >Previous</button>
                                  </li>
                             }
                             {arrPagetion}
@@ -184,7 +199,7 @@ class ThanhToan9Pay extends Component {
                                  </li>
                                  :
                             <li class="page-item ">
-                             <button class="page-link" onClick={() => this.pageNext()}>Next</button>
+                             <button class="page-link" onClick={() => this.CallPage(this.state.page+1)}>Next</button>
                              </li>
                           }    
                         </ul>

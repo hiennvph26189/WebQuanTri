@@ -16,6 +16,8 @@ class Hangsx extends Component {
             id: 0,
             name: '',
             status: 0,
+            TongTrang: 0,
+            page: 1,
         }
     }
 
@@ -25,12 +27,30 @@ class Hangsx extends Component {
 
     }
     CallapiHangsx = async () => {
-        await axios.get(GET_HANGSX).then((res) => {
+        await axios.get(`${GET_HANGSX}?page=${this.state.page}`).then((res) => {
             console.log(res.data)
             if (res.errCode == 0) {
                 this.setState({
-                    arrHangsx: res.data
+                    TongTrang : res.totalCount,
+                    arrHangsx: res.hangsx
                 });
+                console.log(res)
+
+            }
+        }).catch((error) => { console.log(error) });
+    }
+    CallPage = async (page) => {
+        this.setState({
+            page:page
+        });
+        await axios.get(`${GET_HANGSX}?page=${page}`).then((res) => {
+            console.log(res.data)
+            if (res.errCode == 0) {
+                this.setState({
+                    TongTrang : res.totalCount,
+                    arrHangsx: res.hangsx
+                });
+                console.log(res)
 
             }
         }).catch((error) => { console.log(error) });
@@ -134,9 +154,58 @@ class Hangsx extends Component {
             status: status,
         });
     }
+    pagePev = () => {
+        this.CallapiHangsx()
+        this.setState({
+            page: this.state.page -1
+        })
+    }
+    pageNext = () => {
+        this.CallapiHangsx()
+        this.setState({
+            page: this.state.page +1
+        })
+    }
 
 
     render() {
+        let arrPagetion = [];
+            for ( let i = 1; i <= this.state.TongTrang; i++){
+                console.log(i)
+                arrPagetion.push(
+                    <>
+                    {
+                    i === this.state.page?
+                    <li class="page-item disabled">
+                    <button class="page-link"
+                    key={i}
+                    onClick={() => {this.CallPage(i)
+                        this.setState({
+                            page: i
+                        })
+                    }  }
+                
+                >
+                {i}
+              </button></li>
+                    :
+                    <li class="page-item ">
+                    <button class="page-link"
+                    key={i}
+                    onClick={() => {this.CallPage(i)
+                        this.setState({
+                            page: i
+                        })
+                    }  }
+                
+                >
+                {i}
+              </button></li>
+                }
+                    </>
+                )
+            }
+
         let arrHangsx = this.state.arrHangsx
 
         return (
@@ -175,6 +244,30 @@ class Hangsx extends Component {
                                 })}
                         </tbody>
                     </table>
+                    <nav aria-label="Page navigation example" style={{marginTop:'10px'}}>
+                        <ul class="pagination">
+                            {this.state.page === 1?
+                                 <li class="page-item disabled">
+                                 <button class="page-link" tabindex="-1">Previous</button>
+                                 </li>
+                            :
+                            <li class="page-item ">
+                                 <button class="page-link"  onClick={() =>this.CallPage(this.state.page-1)} >Previous</button>
+                                 </li>
+                            }
+                            {arrPagetion}
+                          {
+                            this.state.TongTrang == this.state.page ?
+                            <li class="page-item disabled">
+                                 <button class="page-link" tabindex="-1">Next</button>
+                                 </li>
+                                 :
+                            <li class="page-item ">
+                             <button class="page-link" onClick={() => this.CallPage(this.state.page+1)}>Next</button>
+                             </li>
+                          }    
+                        </ul>
+                    </nav>
                 </div>
                 <Modal
                     isOpen={this.state.isOpenModal}
