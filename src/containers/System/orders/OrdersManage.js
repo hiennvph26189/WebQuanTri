@@ -23,7 +23,7 @@ class OrdersManage extends Component {
             arrMembers:[],
             isOpenEditOrderModal: false,
             itemEditOrder: {},
-            status: "All",
+            status: "0",
             page:1, 
             totalPage:0
 
@@ -45,6 +45,7 @@ class OrdersManage extends Component {
             arrOrders: data.getAllOrder,
             totalPage: data.totalCount
         })
+       
        
     }
     loadDataPanigate = async(status,page)=>{
@@ -242,8 +243,10 @@ class OrdersManage extends Component {
                     arrMembers = {this.state.arrMembers}
                     arrProducts = {this.state.arrProducts}
                     arrCarts = {this.state.arrCarts}
-                    status = {this.state.status}
+                    status = {parseInt(this.state.status)}
+                    page = {this.state.page}
                     loadData = {this.loadData}
+
 
                  
                 />
@@ -251,7 +254,7 @@ class OrdersManage extends Component {
                     
                
                  
-                <div className='title text-center'> Read Orders {this.state.page}</div>
+                <div className='title text-center'> Read Orders</div>
                 <div className='col-3 form-group mg-top'>
              
                     <select name="roleID" class="form-control" onChange={(event)=>this.handleOnChageInput(event)} value={this.state.status}>
@@ -263,6 +266,7 @@ class OrdersManage extends Component {
                     <option value="4">Đơn chờ hủy</option>
                     <option value="5">Đơn đã hủy</option>
                     <option value="10">Đơn đang bị lỗi</option>
+                    <option value="11">Đơn hàng đã hoàn</option>
                     </select>
                 </div>
                 <div className='category-table mt-4 mx-2'>
@@ -270,7 +274,7 @@ class OrdersManage extends Component {
                     <tbody>
                         <tr>
                             
-                            <th style={{width:"200px"}}>Tên người mua</th>
+                            <th style={{width:"200px"}}>Tên người nhận</th>
                             <th>Số điện thoại</th>
                             <th>Tổng tiền</th>
                             <th>Trạng thái</th>
@@ -287,8 +291,8 @@ class OrdersManage extends Component {
                                     <td>{item.hoTen}</td>
                                     <td>{item.soDienThoai}</td>
                                     <td style={{fontWeight:"600",color:"red"}}>{this.price(item.tongTien)}</td>
-                                    <td style={{fontWeight:"600",color:item.status == 0 ? "#FF9900" : item.status == 1 ? "#0099FF" : item.status == 2 ? "#008B8B" : item.status == 3 ? "#006400" :item.status == 4?"#FF6347":"#8B0000"}}>
-                                    {item.status == 0 ? "Đang chờ xử duyệt đơn" : item.status == 1 ? "Đã xác nhận đơn hàng"  : item.status == 2 ? "Đơn đang giao" : item.status == 3 ? "Giao thành công"  :item.status == 4?"Đang Chờ xác nhận hủy đơn":item.status == 5?"Đã hủy thành công":"Đơn hàng đang bị lỗi"}</td>
+                                    <td style={{fontWeight:"600",color:item.status == 0 ? "#FF9900" : item.status == 1 ? "#0099FF" : item.status == 2 ? "#008B8B" : item.status == 3 ? "#006400" :item.status == 4?"#FF6347":item.status == 5?"#008B8B":item.status == 10?"#FF6347":item.status == 11?"#008B8B":"#fff"}}>
+                                    {item.status == 0 ? "Đang chờ xử duyệt đơn" : item.status == 1 ? "Đã xác nhận đơn hàng"  : item.status == 2 ? "Đơn đang giao" : item.status == 3 ? "Giao thành công"  :item.status == 4?"Đang Chờ xác nhận hủy đơn":item.status == 5?"Đã hủy thành công":item.status == 10?"Đơn hàng đang bị lỗi":item.status == 11?"Đã hoàn tiền cho khách":""}</td>
                                     <td>{this.formatDate(item.createdAt)}</td>
                                     
                                     <td className='action' style={{display:"flex", justifyContent:"center",alignItems:"center"}}>

@@ -3,6 +3,7 @@ import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { map } from 'lodash';
 import axios from "../../axios";
+import { toast } from 'react-toastify';
 import ModalCategory from './ModalCategory';
 import ModalEditCategory from './ModalEditCategory';
 import { getAllUCategories,createNewCategories,deleteCategoriesService,editCategoriesService } from '../../services/categoriesService';
@@ -103,12 +104,13 @@ class Categories extends Component {
            console.log(response, "adfadfaf")
            
            if(response.errCode !== 0 && response){
-            alert(response.errMessage)
+            toast.error("Không kết nối được với server")
            }else{
             await this.CallapiCategory()
             this.setState({
                 isOpenModal: false
             })
+            toast.success("Thêm Thể Loại Thành Công")
             emitter.emit("EVENT_CLERA_MODAL_DATA")
            }
         } catch (error) {

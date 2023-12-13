@@ -210,30 +210,30 @@ class ContactManage extends Component {
                 })}     
                 </tbody>
                 </table>
-                <nav aria-label="Page navigation example" style={{marginTop:'10px'}}>
-                        <ul class="pagination">
-                            {this.state.page === 1?
-                                 <li class="page-item disabled">
-                                 <button class="page-link" tabindex="-1">Previous</button>
-                                 </li>
-                            :
-                            <li class="page-item ">
-                                 <button class="page-link"  onClick={() =>this.pagePev()} >Previous</button>
-                                 </li>
-                            }
-                            {arrPagetion}
-                          {
-                            this.state.TongTrang == this.state.page ?
-                            <li class="page-item disabled">
-                                 <button class="page-link" tabindex="-1">Next</button>
-                                 </li>
-                                 :
-                            <li class="page-item ">
-                             <button class="page-link" onClick={() => this.pageNext()}>Next</button>
-                             </li>
-                          }    
-                        </ul>
-                    </nav>
+                    <nav aria-label="Page navigation example" style={{marginTop:'10px'}}>
+                            <ul class="pagination">
+                                {this.state.page === 1?
+                                    <li class="page-item disabled">
+                                    <button class="page-link" tabindex="-1">Previous</button>
+                                    </li>
+                                :
+                                <li class="page-item ">
+                                    <button class="page-link"  onClick={() =>this.pagePev()} >Previous</button>
+                                    </li>
+                                }
+                                {arrPagetion}
+                            {
+                                this.state.TongTrang == this.state.page ?
+                                <li class="page-item disabled">
+                                    <button class="page-link" tabindex="-1">Next</button>
+                                    </li>
+                                    :
+                                <li class="page-item ">
+                                <button class="page-link" onClick={() => this.pageNext()}>Next</button>
+                                </li>
+                            }    
+                            </ul>
+                        </nav>
             </div>
             <Modal 
          isOpen={this.state.isOpenModal}

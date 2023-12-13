@@ -385,7 +385,7 @@ export const HuyOrderCart = (data) => {
                 toast.success("Hủy thành công")
                 // dispatch(updateHuyOrderSuccess())
                 dispatch(HuyOrderSuccess())
-                dispatch(fetchOrderProducts(data.status))
+                dispatch(fetchOrderProducts(data.status.data.page))
             }else{
                 dispatch(HuyOrderFailed())
             }
@@ -448,13 +448,18 @@ export const giaoOrderCart = (data) => {
                 toast.success(res.errMessage)
                 // dispatch(updateHuyOrderSuccess())
                 dispatch(giaoOrderSuccess())
-                dispatch(fetchOrderProducts(data.statuss))
+                dispatch(fetchOrderProducts(data.statuss,data.page))
             }else if(res.errCode === 2){
                 toast.error(res.errMessage)
                 // dispatch(updateHuyOrderSuccess())
                 dispatch(giaoOrderSuccess())
-                dispatch(fetchOrderProducts(data.statuss))
+                dispatch(fetchOrderProducts(data.statuss,data.page))
                
+            }else if(res.errCode === 4){
+                toast.error(res.errMessage)
+                // dispatch(updateHuyOrderSuccess())
+                dispatch(giaoOrderFailed())
+                dispatch(fetchOrderProducts(data.statuss,data.page))
             }else{
                 dispatch(giaoOrderFailed())
             }
