@@ -2,11 +2,14 @@ import React, { Component } from 'react';
 import { FormattedMessage } from 'react-intl';
 import { connect } from 'react-redux';
 import { map } from 'lodash';
+import axios from "../../axios";
 import ModalCategory from './ModalCategory';
 import ModalEditCategory from './ModalEditCategory';
 import { getAllUCategories,createNewCategories,deleteCategoriesService,editCategoriesService } from '../../services/categoriesService';
 import {emitter} from '../../utils/emitter'
 import { getAllProducts } from '../../services/productsService';
+import { GET_CATEGORY } from '../../API';
+
 class Categories extends Component {
     
     constructor(props){
@@ -16,11 +19,13 @@ class Categories extends Component {
             arrCategories2: [],
             isOpenModal: false,
             isOpenEditCategoryModal: false,
-            categoryEdit: {}
+            categoryEdit: {},
+            TongTrang: 0,
+            page: 1,
         }
        }
     async componentDidMount() {
-        await this.getAllCategoryfromReact();
+        this.CallapiCategory();
         
      }
      handleAddNewCategory = ()=>{
@@ -38,16 +43,43 @@ class Categories extends Component {
             isOpenEditCategoryModal: !this.state.isOpenEditCategoryModal
         })
     }
-     getAllCategoryfromReact = async()=>{
-        let response = await getAllUCategories();
+    //  getAllCategoryfromReact = async()=>{
+    //     let response = await getAllUCategories();
        
        
-         this.setState({
-            arrCategories: response.data,
+    //      this.setState({
+    //         arrCategories: response.data,
           
-         }) 
+    //      }) 
         
         
+    // }
+
+    CallapiCategory = async () => {
+        await axios.get(`${GET_CATEGORY}?page=${this.state.page}`).then((res) => {
+            if (res.errCode == 0) {
+                this.setState({
+                    TongTrang : res.totalCount,
+                    arrCategories: res.categories
+                });
+
+            }
+        }).catch((error) => { console.log(error) });
+    }
+
+    CallPage = async (page) => {
+        this.setState({
+            page:page
+        });
+        await axios.get(`${GET_CATEGORY}?page=${page}`).then((res) => {
+            if (res.errCode == 0) {
+                this.setState({
+                    TongTrang : res.totalCount,
+                    arrCategories: res.categories
+                });
+
+            }
+        }).catch((error) => { console.log(error) });
     }
    
     handleDeleteCategory = async(id)=>{
@@ -56,7 +88,7 @@ class Categories extends Component {
             if(response.errCode !== 0 && response){
                 alert(response.errMessage)
             }else{
-                await this.getAllCategoryfromReact()
+                await this.CallapiCategory()
             }
         } catch (error) {
             console.log(error)
@@ -73,7 +105,7 @@ class Categories extends Component {
            if(response.errCode !== 0 && response){
             alert(response.errMessage)
            }else{
-            await this.getAllCategoryfromReact()
+            await this.CallapiCategory()
             this.setState({
                 isOpenModal: false
             })
@@ -100,7 +132,7 @@ class Categories extends Component {
                 this.setState({
                     isOpenEditCategoryModal: false,
                 })
-                await this.getAllCategoryfromReact()
+                await this.CallapiCategory()
             }else{
                 alert(response.errMessage)
             }
@@ -109,6 +141,42 @@ class Categories extends Component {
         }
     }
     render() {
+        let arrPagetion = [];
+        for ( let i = 1; i <= this.state.TongTrang; i++){
+            console.log(i)
+            arrPagetion.push(
+                <>
+                {
+                i === this.state.page?
+                <li class="page-item disabled">
+                <button class="page-link"
+                key={i}
+                onClick={() => {this.CallPage(i)
+                    this.setState({
+                        page: i
+                    })
+                }  }
+            
+            >
+            {i}
+          </button></li>
+                :
+                <li class="page-item ">
+                <button class="page-link"
+                key={i}
+                onClick={() => {this.CallPage(i)
+                    this.setState({
+                        page: i
+                    })
+                }  }
+            
+            >
+            {i}
+          </button></li>
+            }
+                </>
+            )
+        }
         let arrCategories  = this.state.arrCategories
         console.log(arrCategories)
         return (
@@ -161,7 +229,32 @@ class Categories extends Component {
                     })}
                       
 
-                    </tbody></table>
+                    </tbody>
+                    </table>
+                    <nav aria-label="Page navigation example" style={{marginTop:'10px'}}>
+                        <ul class="pagination">
+                            {this.state.page === 1?
+                                 <li class="page-item disabled">
+                                 <button class="page-link" tabindex="-1">Previous</button>
+                                 </li>
+                            :
+                            <li class="page-item ">
+                                 <button class="page-link"  onClick={() =>this.CallPage(this.state.page-1)} >Previous</button>
+                                 </li>
+                            }
+                            {arrPagetion}
+                          {
+                            this.state.TongTrang == this.state.page ?
+                            <li class="page-item disabled">
+                                 <button class="page-link" tabindex="-1">Next</button>
+                                 </li>
+                                 :
+                            <li class="page-item ">
+                             <button class="page-link" onClick={() => this.CallPage(this.state.page+1)}>Next</button>
+                             </li>
+                          }    
+                        </ul>
+                    </nav>
                 </div>
             </div>
         )

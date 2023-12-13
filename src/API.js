@@ -12,6 +12,7 @@ export const POST_HANGSX = URL +"/api-admin/post-hangsx"
 export const PUT_HANGSX = URL +"/api-admin/put-hangsx"
 
 export const GET_NEWS = URL +"/api/get-all-news"
+export const GET_CATEGORY = URL +"/api/get-all-categories"      
 
 
 
