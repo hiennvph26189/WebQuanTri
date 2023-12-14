@@ -8,7 +8,9 @@ import ModalDeleteMember from './ModalDeleteMember';
 import { getAllMembers } from '../../../services/membersService';
 import * as actions from '../../../store/actions'
 import CurrencyFormat from 'react-currency-format';
+import axios  from "../../../axios";
 import  './product.scss';
+import { SEACRH_MEMBERS } from '../../../API';
 
 class Members extends Component {
 
@@ -25,7 +27,10 @@ class Members extends Component {
             idMember: {},
             id:'',
             page:1,
-            totalCount:0
+            totalCount:0,
+            search:"",
+            countPageSearch: 0,
+            pageSearch:1,
         }
     }   
     async componentDidMount() {
@@ -140,9 +145,52 @@ class Members extends Component {
             isOpenModalDeleteMember:!this.state.isOpenModalDeleteMember
         })
     }
-    render() {
-        
+
+    timKiemSanPham = async(event)=>{
+        let key_search = event.target.value
+        this.setState({
+            search: event.target.value
+        })
+        if(key_search !=""){
+            await axios.get(`${SEACRH_MEMBERS}?key_search=${key_search}&page=${this.state.pageSearch}`).then((res)=>{
+               if(res.errCode == 0){
+                    this.setState({
+                        arrMembers : res.data,
+                        countPageSearch: res.totalCount
+                    })
+               }else{
+                    this.setState({
+                        arrMembers : [],
+                        countPageSearch: 0
+                    })
+               }
+            }).catch((err)=>{console.log(err);})
+        }else{
+            this.setState({
+                search:""
+            })
+            this.getALLMember(1);
+        }
        
+        
+    }
+
+    clickPatigationSearch = async(page)=>{
+        let search = this.state.search
+        await axios.get(`${SEACRH_MEMBERS}?key_search=${search}&page=${page}`).then((res)=>{
+            if(res.errCode == 0){
+                 this.setState({
+                     arrMembers : res.data,
+                     countPageSearch: res.totalCount
+                 })
+            }
+         }).catch((err)=>{console.log(err);})
+    }
+    render() {
+        let countPageSearch = this.state.countPageSearch
+
+        let pageButtonsSearch = []
+
         let arrMembers = [...this.state.arrMembers]
         let arrPagetion = [];
         for ( let i = 1; i <= this.state.totalCount; i++){
@@ -180,6 +228,44 @@ class Members extends Component {
                 </>
             )
         }
+
+        for (let i = 1; i <= countPageSearch; i++) {
+            pageButtonsSearch.push(
+                <>{
+                    i === this.state.page?
+                    <li class="page-item disabled">
+                    <button class="page-link"
+                    key={i}
+                    onClick={() => {this.clickPatigationSearch(i)
+                        this.setState({
+                            page: i
+                        })
+                    }  }
+                
+                >
+                {i}
+              </button></li>
+                    :
+                    <li class="page-item ">
+                    <button class="page-link"
+                    key={i}
+                    onClick={() => {this.clickPatigationSearch(i)
+                        this.setState({
+                            page: i
+                        })
+                    }  }
+                
+                >
+                {i}
+              </button></li>
+                }
+                 
+                </>
+               
+              
+            );
+           
+          }
         return (
             <div className="container members-container">
             <ModalMembers
@@ -225,10 +311,23 @@ class Members extends Component {
             
              
             <div className='title text-center'> Read Members</div>
-            <div className='mx-2'>
+            <div style={{display:'flex'}} className='mx-2'>
                 <button className='btn btn-primary px-2' onClick={()=>this.handleAddNewMembers()}> <i className='fas fa-plus px-2'></i>Add new members</button>
+                <div class="row mt-10 col-8">
+                    <div class="col-md-5 mx-auto">
+                        
+                        <div class="input-group">
+                            <input class="form-control  border" onChange={(event)=>this.timKiemSanPham(event)} type="search" value={this.state.search} placeholder='Tìm kiếm email người dùng' id="example-search-input"/>
+                            <span class="input-group-append">
+                                
+                            </span>
+                        </div>
+                    </div>
+                </div>
             </div>
+
             <div className='members-table mt-4 mx-2'>
+                
             <table id="customers" class="ws-table-all px-5">
                 <tbody>
                     <tr>
@@ -236,7 +335,6 @@ class Members extends Component {
                         <th>Tên người dùng</th>
                         <th>Email</th>
                         <th >Số điện thoại</th>
-                       
                         <th>Tiền tài khoản</th>
                         <th >Tiền nạp</th>
                         <th>Trạng thái</th>
@@ -306,6 +404,16 @@ class Members extends Component {
                     
                 </tbody>
                 </table>
+                {this.state.search !="" ? <nav aria-label="Page navigation example">
+                        <ul class="pagination justify-content-center">
+                            
+                            {pageButtonsSearch}
+                            
+                           
+                           
+                        </ul>
+                    </nav>
+                    :
                 <nav aria-label="Page navigation example" style={{marginTop:'10px'}}>
                         <ul class="pagination">
                             {this.state.page === 1?
@@ -330,6 +438,7 @@ class Members extends Component {
                           }    
                         </ul>
                     </nav>
+                    }
             </div>
         </div>
         )
