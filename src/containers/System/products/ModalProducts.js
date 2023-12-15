@@ -12,6 +12,7 @@ import  './product.scss';
 import { CKEditor } from '@ckeditor/ckeditor5-react';
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 import axios  from "../../../axios";
+import { GET_ALL_HANGSX } from '../../../API';
 
 
 class ModalProducts extends Component {
@@ -19,7 +20,7 @@ class ModalProducts extends Component {
     constructor(props) {
         super(props);
         this.state = {
-           
+           arrHangSx:[],
             arrCategories2: [],
            privewImageUrl: '',
            isOpenImage: false,
@@ -31,12 +32,14 @@ class ModalProducts extends Component {
            giaSanPham: '',
            idDanhSach: '',
            giaNhap: '',
+           tenHang:"",
            hot: false,
            sale: 0,
            image: "",
            image2: "",
            sale: 0,
            mota: "",
+           status: 0,
            sizeQuantities: {},
             file: [],
             file2: []
@@ -55,11 +58,26 @@ class ModalProducts extends Component {
         
         
     }
+
     async componentDidMount () {
        
-       this.props.getCategoriesStart()
+       this.props.getCategoriesStart()  
+       this.getAllHangSX()
+       console.log("LSK:SKDKSAK");
      
     }
+    getAllHangSX = async()=>{
+        
+       await axios.get(GET_ALL_HANGSX).then((res)=>{
+            console.log(res.hangsx,":SKAK");
+            if(res.errCode == 0){
+                
+                this.setState({
+                    arrHangSx:res.hangsx
+                })
+            }
+        }).catch((err)=>{console.log(err);})
+}
     toggle = () => {
         this.setState({
             file:[]
@@ -251,7 +269,8 @@ class ModalProducts extends Component {
           };
         });
       };
-    render() {  
+    render() {
+        const {arrHangSx} = this.props  
         const { sizeQuantities } = this.state;
         console.log(sizeQuantities);
         let arrCategories = this.state.arrCategories2
@@ -287,9 +306,21 @@ class ModalProducts extends Component {
                                 <label>Tên sản phẩm</label>
                                 <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'tenSp')} name="tenSp" value={this.state.tenSp}/>
                             </div> 
-                            <div className='col-12 form-group mg-top'>
+                            <div className='col-4 form-group mg-top'>
                                 <label>Hãng sản xuất</label>
-                                <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'hangSx')} name="hangSx" value={this.state.hangSx}/>
+                                <select name="roleID" class="form-select" onChange={(event)=>this.handleOnChageInput(event,'hangSx')} value={this.state.hangSx}>
+                                    <option selected value="">---- Chọn hãng sản xuất -----</option>
+                                    {arrHangSx&&arrHangSx.length > 0&&arrHangSx.map((item, i)=>{
+                                        return(
+                                            <>
+                                                <option  value={item.name}>{item.name}</option>
+                                            </>
+                                        )
+                                    })
+                                
+                                    }
+                                    </select>
+                               
                             </div>
                             <div className='col-6 form-group mg-top'>
                                 <label>Giá nhập</label>

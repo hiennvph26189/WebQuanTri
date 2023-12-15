@@ -21,6 +21,9 @@ export const SEACRH_PRODUCT = URL+'/api/search-product-admin'
 
 // tìm kiếm members theo email
 export const SEACRH_MEMBERS = URL+'/api/search-members-admin'
+// 
+export const GET_ALL_HANGSX = URL+'/api-admin/list-hangsx'
+
 
 
 

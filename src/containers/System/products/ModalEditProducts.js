@@ -33,6 +33,7 @@ class ModalEditProducts extends Component {
            privewImageUrl: '',
            sale: 0,
            mota: "",
+           status_sp:"",
             image: [],
             file:[],
             sizeQuantities: {},
@@ -92,7 +93,7 @@ class ModalEditProducts extends Component {
                 giaNhap: products.giaNhap,
                 mota: products.mota,
                 id: products.id,
-
+                status_sp:products.status
                
                 
             })
@@ -139,6 +140,7 @@ class ModalEditProducts extends Component {
                 giaNhap: this.state.giaNhap,
                 soLuong: this.state.soLuong,
                 id: this.state.id,
+                status: this.state.status_sp,
                 image: JSON.stringify(this.state.file),
                 page:this.props.page,
                 listSizes: JSON.stringify(this.state.sizeQuantities)
@@ -282,8 +284,13 @@ class ModalEditProducts extends Component {
             };
           });
       };
+    editStatus = (numberStatus)=>{
+        this.setState({
+            status_sp: numberStatus
+        })
+    }
     render() {  
-
+        const {arrHangSx} = this.props
         const { sizeQuantities } = this.state;
         console.log(sizeQuantities);
         let arrCategories = this.state.arrCategories2
@@ -315,9 +322,21 @@ class ModalEditProducts extends Component {
                                 <label>Tên sản phẩm</label>
                                 <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'tenSp')} name="tenSp" value={this.state.tenSp}/>
                             </div> 
-                            <div className='col-12 form-group mg-top'>
+                            <div className='col-4 form-group mg-top'>
                                 <label>Hãng sản xuất</label>
-                                <input type="text" className="form-control" placeholder='Nhập tên loại sản phẩm' onChange={(event)=>this.handleOnChageInput(event,'hangSx')} name="hangSx" value={this.state.hangSx}/>
+                                <select name="roleID" class="form-select" onChange={(event)=>this.handleOnChageInput(event,'hangSx')} value={this.state.hangSx}>
+                                    <option selected value="">---- Chọn hãng sản xuất -----</option>
+                                    {arrHangSx&&arrHangSx.length > 0&&arrHangSx.map((item, i)=>{
+                                        return(
+                                            <>
+                                                <option  value={item.name}>{item.name}</option>
+                                            </>
+                                        )
+                                    })
+                                
+                                    }
+                                    </select>
+                               
                             </div>
                             <div className='col-12 form-group mg-top'>
                                 <label>Giá nhập</label>
@@ -461,7 +480,23 @@ class ModalEditProducts extends Component {
                         
                        
                     />}
-                    
+                   <div className='col-12 form-group mg-top'>
+                                    <label>Trạng thái hoạt động </label>
+                                    <div class="form-check">
+                                        <input checked={this.state.status_sp === 0}
+                                            onChange={() => this.editStatus(0)} class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault1" />
+                                        <label class="form-check-label" for="flexRadioDefault1">
+                                            Hoạt động
+                                        </label>
+                                    </div>
+                                    <div class="form-check">
+                                        <input checked={this.state.status_sp === 2}
+                                            onChange={() => this.editStatus(2)} class="form-check-input" type="radio" name="flexRadioDefault" id="flexRadioDefault2"  />
+                                        <label class="form-check-label" for="flexRadioDefault2">
+                                            Không hoạt động
+                                        </label>
+                                    </div>
+                                </div> 
                 </ModalBody>
                 <ModalFooter>
                 <Button color="success" className='px-2' onClick={()=>this.handleEditProducts()}>

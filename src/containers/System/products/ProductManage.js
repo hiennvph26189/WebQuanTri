@@ -7,7 +7,7 @@ import { getAllProducts } from '../../../services/productsService';
 import * as actions from '../../../store/actions'
 import CurrencyFormat from 'react-currency-format';
 import  './product.scss';
-import { SEACRH_PRODUCT } from '../../../API';
+import { SEACRH_PRODUCT,GET_ALL_HANGSX } from '../../../API';
 import axios  from "../../../axios";
 class ProductManage extends Component {
 
@@ -22,6 +22,7 @@ class ProductManage extends Component {
             productsEdit: {},
             currentPage:1,
             lenghtPage: [],
+            status:0,
             totalProducts: 0,
             // currentPage: 1,
             pageSize: 5,
@@ -29,6 +30,7 @@ class ProductManage extends Component {
             search:"",
             countPageSearch: 0,
             pageSearch:1,
+            arrHangSx:[]
         }
        }
      
@@ -36,17 +38,26 @@ class ProductManage extends Component {
         
        
         this.props.fetchProducts(this.state.currentPage) 
-   
+        this.getAllHangSX()
         // this.setState({ orders, totalCount, currentPage: this.state.page });
     }
-     
+    getAllHangSX = async()=>{
+            axios.get(GET_ALL_HANGSX).then((res)=>{
+                console.log(res, "Hãng Sản xuất");
+                if(res.errCode == 0){
+                    this.setState({
+                        arrHangSx:res.hangsx
+                    })
+                }
+            }).catch((err)=>{console.log(err);})
+    }
     handleAddNewProducts = ()=>{
         this.setState({
             isOpenModal: true
         })
     }
     toggleProductsModal = ()=>{
-        this.setState({
+        this.setState({     
             isOpenModal: !this.state.isOpenModal
         })
     }
@@ -271,6 +282,7 @@ class ProductManage extends Component {
                     test = {'abc'}
                     toggleFromParent = {this.toggleProductsModal}
                     createNewProducts = {this.createNewProducts}
+                    arrHangSx = {this.state.arrHangSx}
                 />
                 {this.state.isOpenEditProductsModal &&
                     <ModalEditProducts
@@ -278,6 +290,7 @@ class ProductManage extends Component {
                     toggleFromParent = {this.toggleEditProductsModal}
                     currentProducts = {this.state.productsEdit}
                     page = {this.state.currentPage}
+                    arrHangSx = {this.state.arrHangSx}
                      
                 />
                     
