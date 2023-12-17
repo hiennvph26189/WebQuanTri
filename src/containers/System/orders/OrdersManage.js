@@ -35,7 +35,7 @@ class OrdersManage extends Component {
     async componentDidMount() {
         this.props.fetchOrderProducts(this.state.status,this.state.page)
         this.props.fetchProducts()
-        this.props.fetchMembers()
+        this.props.fetchMembers(1)
         this.loadData(this.state.status,this.state.page)
         
      }
@@ -357,7 +357,7 @@ const mapDispatchToProps = dispatch => {
     return {
         fetchOrderProducts: (status,page)=> dispatch(actions.fetchOrderProducts(status,page)),
         fetchProducts: ()=> dispatch(actions.fetchAllProducts()),
-        fetchMembers: ()=> dispatch(actions.fetchMembers()),
+        fetchMembers: (page)=> dispatch(actions.fetchMembers(page)),
         deleteOrderCart: (id,status)=> dispatch(actions.deleteOrderCart(id,status))
     };
 };

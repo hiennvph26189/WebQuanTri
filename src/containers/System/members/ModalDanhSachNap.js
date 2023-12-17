@@ -169,7 +169,7 @@ class ModalDanhSachNap extends Component {
             <table id="customers" class="ws-table-all px-5">
                 <tbody>
                     <tr>
-                        <th>Ảnh</th>
+                       
                         <th>Số tiền nạp</th>
                         <th>Ngày nạp</th>
                         <th>Trạng thái</th>
@@ -180,9 +180,7 @@ class ModalDanhSachNap extends Component {
                     return(
                         <>
                             <tr>
-                               <td style={{display:'flex',justifyContent:'center',alignItems:"center"}}>
-                               <img  onClick={()=>this.handleImagePrice(item.anhCK)}  style={{maxWidth:'150px', maxHeight: "150px"}} src={item.anhCK}/>
-                               </td>
+                              
                              
                                <td style={{color: item.status === 1?'#228B22':"#B22222", fontWeight:'600', textAlign:"center"}}>
                                     { item.status === 1?"+"+this.price(item.tienNap):this.price(item.tienNap)}

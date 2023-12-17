@@ -324,7 +324,7 @@ class ProductManage extends Component {
                             <th className='soLuong manhinhdienthoai tablet maytinh'>soLuong</th>
                             <th  className='sale manhinhdienthoai tablet maytinh'>Sale</th>
                             <th className='hot manhinhdienthoai tablet maytinh'>Hot</th>
-                            <th className='luotXem manhinhdienthoai tablet maytinh'>lượt xem</th>
+                            <th className='luotXem manhinhdienthoai tablet maytinh'>lượt like</th>
                             <th className='luotMua manhinhdienthoai tablet maytinh'>lượt mua</th>
                             <th className='action'>Action</th>
                         </tr>
@@ -353,15 +353,15 @@ class ProductManage extends Component {
                                         ) })}
                                     </td>
                                     <td  className="manhinhdienthoai tablet maytinh">{item.hangSx}</td>
-                                    <td className="manhinhdienthoai">{this.price(item.giaSanPham)}</td>
+                                    <td className="manhinhdienthoai" style={{color:"red"}}>{this.price(item.giaSanPham)}</td>
                                     <td className="manhinhdienthoai tablet maytinh">{item.soLuong}</td>
                                     <td  className="manhinhdienthoai tablet maytinh">{item.sale+ " %"}</td>
                                     <td  className="manhinhdienthoai tablet maytinh">{item.hot === 1? <i class="fas fa-check"></i>: ''}</td>
-                                    <td  className="manhinhdienthoai tablet maytinh">{item.luotXem}</td>
+                                    <td  className="manhinhdienthoai tablet maytinh">{item.luotTim}</td>
                                     <td className="manhinhdienthoai tablet maytinh">{item.luotMua}</td>
                                     <td className='action'>
                                     <button onClick={()=>this.handleEditProducts(item)} class="btn btn-success mx-1 px-2 ">Edit</button>
-                                    <button onClick={()=>this.handleDeleteProducts(item.id)} class="btn btn-warning  px-2">Ẩn</button>
+                                   
                                     </td>
                                 </tr>
                             </>
